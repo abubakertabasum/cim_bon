@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="assets_cim" inherit_id="web.assets_backend">
+		<xpath expr="." position="inside">
+			<link rel="stylesheet" href="/cim/static/src/scss/style.scss" />
+		</xpath>
+	</template>
+	
+	<template id="assets_backend" name="custom assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/cim/static/src/js/title.js"></script>
+        </xpath>
+    </template>
+    
+    <template id="he_web_layout_inherited" inherit_id="web.layout">
+		<xpath expr="//link[@type='image/x-icon']" position="replace">
+			<link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/cim/static/src/img/favicon.ico'"/>
+		</xpath>
+		<xpath expr="//title[1]" position="replace">
+			<title t-esc="title or 'CIM'"/>
+		</xpath>
+	</template>
+
+</odoo>

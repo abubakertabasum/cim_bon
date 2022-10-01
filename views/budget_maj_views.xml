@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<!-- action Lignes budgétaires -->
+    	<record model="ir.actions.act_window" id="action_view_budget_line">
+			<field name="name">Lignes budgétaires</field>
+			<field name="res_model">cim.budget.line</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('budget_id', '=', active_id)]</field>
+		</record>
+
+		<!-- Budget form view -->
+		<record model="ir.ui.view" id="cim_budget_form">
+			<field name="name">cim.budget.form</field>
+			<field name="model">cim.budget</field>
+			<field name="arch" type="xml">
+				<form string="Budget">
+					<header>
+						<field name="state" widget="statusbar"
+							statusbar_visible="new,validated" />
+						<button name="act_validate" string="Valider" states="new"
+							type="object" class="oe_highlight" />
+						<button name="act_in_progress" states="validated"
+							string="Annuler" type="object" />
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button type="action" class="oe_stat_button" icon="fa-pencil-square-o" name="%(action_view_budget_line)d" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Lignes budgétaires</span>
+		                        </div>
+		                    </button>
+						</div>
+						<div class="oe_title">
+							<h1 position="after">
+								<label for="name" class="oe_edit_only" />
+								<h3>
+									<field name="name" />
+								</h3>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="exercice_id" />
+								<field name="budget_type_id" />
+								<field name="montant_budget" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								<field name="company_id" readonly="1"/>
+								<field name="currency_id" invisible="1" />
+							</group>
+						</group>
+						<notebook>
+							<page string='Lignes budgétaires'>
+								<field name="budget_line_ids">
+									<tree editable="bottom">
+										<field name="programme_id" domain="[('state','=','validated')]"/>
+										<field name="sectionbudgetaire_id" string="Section" />
+										<field name="programmechapitre_id" />
+										<field name="actionarticle_id" />
+										<field name="activiteparagraphe_id" />
+										<field name="paragrapherubrique_id" />
+										<field name="company_id" invisible="1" />
+										<field name="currency_id" invisible="1" />
+										<field name="montant" widget="monetary"
+											options="{'currency_field': 'currency_id'}" />
+										<field name="credit_dispo" widget="monetary" readonly="0"
+											options="{'currency_field': 'currency_id'}" />
+									</tree>
+								</field>
+								<group class="oe_subtotal_footer oe_right" colspan="2"
+									name="total">
+									<div
+										class="oe_subtotal_footer_separator oe_inline o_td_label">
+										<label for="total" />
+									</div>
+									<field name="total" nolabel="1" widget="monetary"
+										options="{'currency_field': 'currency_id'}"
+										class="oe_subtotal_footer_separator" />
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+
+		<!-- Budget tree view -->
+		<record model="ir.ui.view" id="cim_budget_tree">
+			<field name="name">cim.budget.tree</field>
+			<field name="model">cim.budget</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="exercice_id" />					
+					<field name="state" />
+					<field name="company_id" />
+					<field name="budget_type_id" />
+					<field name="montant_budget" />
+					<field name="total" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="budget_menu_maj_action" model="ir.actions.act_window">
+			<field name="name">Modification Budget</field>
+			<field name="res_model">cim.budget</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="domain"></field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+		</record>
+		
+		
+		
+		<!-- Budget line tree view -->
+		<record model="ir.ui.view" id="cim_budget_line_tree">
+			<field name="name">cim.budget.line.tree</field>
+			<field name="model">cim.budget.line</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="programme_id" />
+					<field name="sectionbudgetaire_id" />
+					<field name="programmechapitre_id" />
+					<field name="actionarticle_id" />
+					<field name="activiteparagraphe_id" />
+					<field name="paragrapherubrique_id" />
+					<field name="company_id" invisible="1"/>
+					<field name="currency_id" invisible="1"/>
+					<field name="montant" options="{'currency_field': 'currency_id'}" />
+					<field name="credit_dispo" options="{'currency_field': 'currency_id'}" />
+				</tree>
+			</field>
+		</record>
+		
+		<!--budget line form view -->
+		<record model="ir.ui.view" id="cim_budget_line_form">
+			<field name="name">cim.budget.line.form</field>
+			<field name="model">cim.budget.line</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<group>
+								<field name="programme_id" />
+								<field name="sectionbudgetaire_id" />
+								<field name="programmechapitre_id" />
+								<field name="actionarticle_id" />
+								<field name="activiteparagraphe_id" />
+								<field name="paragrapherubrique_id" />
+								<field name="company_id" invisible="1"/>
+								<field name="currency_id" invisible="1"/>
+								<field name="montant" options="{'currency_field': 'currency_id'}" />
+								<field name="credit_dispo" options="{'currency_field': 'currency_id'}" />
+							</group>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+		
+
+		<menuitem name="Modification du Budget" id="menu_cim_update_budget"
+			parent="menu_cim_admin_fonctionnel" sequence="801" action="budget_menu_maj_action" 
+			groups="cim.group_regisseur"/>
+
+	</data>
+</odoo> 

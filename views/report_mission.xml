@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_mission_final_document">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="o" t-value="o.with_context({'lang': lang})"/>
+				<div class="page">
+					<h2 style="text-align:center;">
+						<span t-if="o.is_draft == False">RAPPORT MISSION CLOTUREE</span>
+						<span t-if="o.is_draft == False" t-field="o.name" />
+					</h2>
+					<br />
+					<br />
+					<br />
+					<tr t-if="o.head_id.name">
+						<tr style="padding:15px;">
+							<strong>Chef de mission :</strong>
+						</tr>
+						<tr style="padding:15px;">
+							<span t-field="o.head_id.name"/>
+						</tr>
+					</tr>
+					<div>
+						<tr t-if="o.driver_id.name">
+							<tr style="padding:15px;">
+								<strong>Conducteur :</strong>
+							</tr>
+							<tr style="padding:15px;">
+								<span t-field="o.driver_id.name"/>
+							</tr>
+						</tr>
+					</div>
+					<tr t-if="o.date_from">
+						<td style="padding:15px;">
+							<strong>Date début mission:</strong>
+						</td>
+						<td style="padding:15px;">
+							<span t-field="o.date_from"/>
+						</td>
+					</tr>
+					<div>
+						<tr t-if="o.date_to">
+							<td style="padding:15px;">
+								<strong>Date fin mission:</strong>
+							</td>
+							<td style="padding:15px;">
+								<span t-field="o.date_to"/>
+							</td>
+						</tr>
+					</div>
+					<div t-if="o.participant_ids">
+										<h2>Les participants</h2>
+					<table
+						class="table table-bordered table-sm text-center border border-dark"
+						dir="rtl" border="1" style="border-collapse: collapse;width: 100%;">
+						<thead>
+							<tr>
+								<th class="align-middle">Adresse électronique</th>
+								<th class="align-middle">Téléphone professionnel</th>
+								<th class="align-middle">Département</th>
+								<th class="align-middle">Poste occupé</th>
+								<th class="align-middle">Nom du participant</th>
+							</tr>
+						</thead>
+						<tbody class="tbody">
+							<div t-foreach="o.participant_ids" t-as="l">
+								<tr>
+									<td>
+										<span t-field="l.work_email"/>
+									</td>
+									<td>
+										<span t-field="l.work_phone"/>
+									</td>
+									<td>
+										<span t-field="l.department_id"/>
+									</td>
+									<td>
+										<span t-field="l.job_id"/>
+									</td>
+									<td>
+										<span t-field="l.name"/>
+									</td>
+								</tr>
+							</div>
+						</tbody>
+					</table>
+					</div>
+					
+					<div t-if="o.frais_ids">
+					<h2>Frais de mission</h2>
+					<table
+						class="table table-bordered table-sm text-center border border-dark"
+						 border="1" style="border-collapse: collapse;width: 100%;">
+						<thead>
+							<tr>
+								<th class="align-middle">Participant</th>
+								<th class="align-middle">Article</th>
+								<th class="align-middle">Budget</th>
+								<th class="align-middle">Description</th>
+								<th class="align-middle">Quantité</th>
+								<th class="align-middle">Montant unitaire</th>
+								<th class="align-middle">Montant total</th>
+							</tr>
+						</thead>
+						<tbody class="tbody">
+							<div t-foreach="o.frais_ids" t-as="l">
+								<tr>
+									<td>
+										<span t-field="l.employee_id"/>
+									</td>
+									<td>
+										<span t-field="l.product_id"/>
+									</td>
+									<td>
+										<span t-field="l.budget_id"/>
+									</td>
+									<td>
+										<span t-field="l.name"/>
+									</td>
+									<td>
+										<span t-field="l.quantity"/>
+									</td>
+									
+									<td>
+										<span t-field="l.unit_amount"/>
+									</td>
+									<td>
+										<span t-field="l.total_amount"/>
+									</td>
+								</tr>
+							</div>
+						</tbody>
+					</table>
+			</div>
+						   <div class="row justify-content-end" t-if="o.expense_total">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td></td>
+                                        <td class="text-right" >
+                                        <strong>Total des frais</strong>
+                                            <span t-field="o.expense_total"
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div> 
+                        
+                        
+					<div t-if="o.other_frais_ids">
+					<h2>Autres frais</h2>
+					<table
+						class="table table-bordered table-sm text-center border border-dark"
+						 border="1" style="border-collapse: collapse;width: 100%;">
+						<thead>
+							<tr>
+								<th class="align-middle">Participant</th>
+								<th class="align-middle">Article</th>
+								<th class="align-middle">Budget</th>
+								<th class="align-middle">Description</th>
+								<th class="align-middle">Quantité</th>
+								<th class="align-middle">Montant unitaire</th>
+								<th class="align-middle">Montant total</th>
+							</tr>
+						</thead>
+						<tbody class="tbody">
+							<div t-foreach="o.other_frais_ids" t-as="l">
+								<tr>
+									<td>
+										<span t-field="l.employee_id"/>
+									</td>
+									<td>
+										<span t-field="l.product_id"/>
+									</td>
+									<td>
+										<span t-field="l.budget_id"/>
+									</td>
+									<td>
+										<span t-field="l.name"/>
+									</td>
+									<td>
+										<span t-field="l.quantity"/>
+									</td>
+									
+									<td>
+										<span t-field="l.unit_amount"/>
+									</td>
+									<td>
+										<span t-field="l.total_amount"/>
+									</td>
+								</tr>
+							</div>
+						</tbody>
+					</table>
+			   </div> 
+					
+					 <div class="row justify-content-end"  t-if="o.other_expense_total">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td></td>
+                                        <td class="text-right">
+                                        <strong>Total des frais</strong>
+                                            <span t-field="o.other_expense_total"
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div> 
+					<br />
+					<br />
+					<br />
+					<div class="row">
+						<div class="text-right">
+							<span t-if="o.establishment_id.timbre" t-field="o.establishment_id.timbre" />
+							<span t-if="o.department_id.timbre" t-field="o.department_id.timbre" />
+							<strong>
+								<span>Signature</span>
+							</strong>
+						</div>
+					</div>
+				</div>
+			</t>
+			<div class="footer" style="position:absolute; margin:0px; padding:0px">
+						<span class="page"/>/<span class="topage"/>
+			</div>
+		</template>
+
+		<template id="report_mission_final">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_mission_final_document" t-lang="lang" /></t>
+			</t>
+		</template>
+	</data>
+</odoo>

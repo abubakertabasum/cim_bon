@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="UserMenu">
+        <t t-jquery="div.dropdown-menu.dropdown-menu-right"
+           t-operation="replace">
+            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                <a role="menuitem" href="#" data-menu="settings"
+                   class="dropdown-item">Preferences</a>
+                <a role="menuitem" href="#" data-menu="logout"
+                   class="dropdown-item">Log out</a>
+            </div>
+        </t>
+    </t>
+
+    <!-- <t t-extend="DashboardMain">
+        <t t-jquery=".o_web_settings_dashboard" t-operation="replace">
+        	<div class="container-fluid py-2 o_web_settings_dashboard">
+            	<div class="form-row">
+            		<div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+            			<div class="o_web_settings_dashboard_invitations"></div>
+            		</div>
+            	</div>
+            </div>
+        </t>
+    </t> -->
+    
+    <t t-extend="mail.client_action">
+      <t t-jquery=".o_mail_request_permission" t-operation="inner">
+        Your permission is required to <a href="#"> enable desktop notifications</a>.
+      </t>
+    </t>
+    
+    
+</templates>

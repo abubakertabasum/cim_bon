@@ -1,0 +1,21 @@
+
+$cim-black-color: #343638;
+$cim-tfoot-color: #ececec;
+
+.settings_tab{
+	background-color: $cim-black-color !important;
+}
+
+.o_mail_discuss_sidebar{
+	background-color: $cim-black-color !important;
+}
+
+.o_list_view tfoot{
+	background-color: $cim-tfoot-color;
+}
+
+.o_menu_apps .dropdown-menu.show .o-app-icon {
+    height: auto;
+    max-width: 7rem;
+    width: auto;
+}

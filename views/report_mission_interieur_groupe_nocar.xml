@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_mission_interieur_group_nocar_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page">
+					<h5 style="text-align:center;">
+						<div class="row justify-content-between">
+							<div class="col-4"
+								style="float:left;font-size:15px; font-weight:bold">
+								<div t-foreach="o.department_id" t-as="e">
+									<span t-field="e.timbre" />
+								</div>
+							</div>
+							<div class="col-4 mb4">
+								<img t-if="o.establishment_id.logo"
+									t-att-src="image_data_uri(o.establishment_id.logo)"
+									style="width:50%;" alt="Logo" />
+									
+									 
+							</div>
+							<div class="col-4 text-right"
+								style="float:right; padding:2px;">
+								<div style="padding:5px;text-align:center;">
+									<div style="font-size:15px; font-weight:bold;">BURKINA FASO</div>
+									<div style="font-size:15px;">**********</div>
+									<div style="font-size:15px;">Unité-Progrés-Justice</div>
+								</div>
+									
+							</div>
+						
+                         </div>
+                         <div style="float:right;font-size:15px;width: 20%">
+                            <p>Ouagadougou le,<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%y')"/></p>				
+                                  </div>
+						<div style="clear:both;"></div>
+						<br></br>
+						
+
+					</h5>
+					<br></br>
+					
+
+					<div style="text-align:center;">
+						<span style="font-size:15px;padding:5px">
+							Je sousigné,
+							<span t-field="o.establishment_id.ordonnateur_id.civilite" />
+							.
+							<span t-field="o.establishment_id.ordonnateur_id" />
+							,
+							<span t-field="o.establishment_id.ordonnateur_id.job_id" />
+							ordonne la mission qui suit :
+						</span>
+					</div>
+
+					<br></br>
+					
+					
+<head>
+<style>
+.shadowbox {
+ font-weight:Times New Roman;
+  
+}
+
+   
+
+.macouleur{
+background-color : darkblue;
+color: white;
+text-align: center;
+}
+
+#customers {
+  
+  font-family: Times New Roman;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td {
+  border: 1px solid;
+
+  width: 20%;
+  padding: 1em;
+}
+
+#customers tr:nth-child(even){border: 0.5px solid;
+ color: black;
+ }
+
+#customers tr:hover {background-color: #ddd;
+ color: black;
+border: 0.5px solid ;}
+
+#customers th {     
+
+ 
+  padding: 1em;
+  padding-bottom: 5px;
+  text-align: center;
+  background-color:  ;
+  color: black;
+  border: 1px solid;;
+}
+</style>
+</head>
+					
+<body>
+
+    <div style="text-align:center;font-weight:bold;font-size:15px;">
+							
+								Numero:
+<!-- 								<span t-field="o.num_mission" /> -->
+								<span t-foreach="o.participant_ids" t-as="p">
+									<span t-if="p.role_mission_id.code == 'M'">
+										<span>
+											<span t-field="p.num_om" />
+										</span>
+									</span>
+								</span>
+							
+
+						</div>
+					<div style="text-align:center;font-weight:bold;font-size:15px;">
+							
+								Imputation
+<!-- 								<span t-field="o.num_mission" /> -->
+							
+                          </div>
+                           <div style="text-align:center;font-weight:Times New Roman;font-size:12px;">
+                            <tr>
+							<th style="text-align:center;" colspan="4">
+								<i>
+							Section:
+							<span
+								t-field="o.budget_line_id.sectionbudgetaire_id.code_section" />
+							-
+							Programme:
+							<span
+								t-field="o.budget_line_id.programmechapitre_id.code_programmechapitre" />
+							-
+							Action:
+							<span
+								t-field="o.budget_line_id.actionarticle_id.code_actionarticle" />
+							-
+							Activité:
+							<span
+								t-field="o.budget_line_id.activiteparagraphe_id.code_activiteparagraphe" />
+							-
+							Paragraphe:
+							<span
+								t-field="o.budget_line_id.paragrapherubrique_id.code_paragrapherubrique" />
+						</i>
+							</th>
+						</tr>
+						  </div>
+						  
+						
+						<br></br>
+						<tr>
+							<td style= "text-align:left;">
+								<span style="font-weight:bold;float:left ;gras;">Objet : </span>
+							</td>
+							<td style= "text-align:left;" colspan="3">
+								<span style="font-size:15px; font-weight:Times New Roman;" t-field="o.object" />
+							</td>
+						</tr>
+						
+						    <br></br>
+		                      <tr>
+						      <td style="text-align:left;font-weight:bold;font-size:15px;">
+						      <span style="font-weight:bold;float:left ;gras;">Motif : </span>
+								</td>
+								 <td style= "text-align:left;" colspan="3">
+<!-- 								<span t-field="o.num_mission" /> -->
+								<span style="font-size:15px;font-weight:Times New Roman;" t-field="o.motif_mission_id.name"  />
+									 </td>
+						         </tr>
+						    <br></br>
+					
+					   
+					     <table style="width:100%;">
+						<tr>
+							<td colspan="2">
+								<b style="font-size:15px;font-family: TimesNewRoman;">Date départ: </b>
+							</td>
+							<td>
+								<span style="font-size:15px" t-field="o.date_from" />
+							</td>
+							<td style= "text-align:right;">
+								<b style="font-size:15px;font-family: TimesNewRoman;">Date retour: </b>
+							</td>
+							<td style= "text-align:right;">
+								<span style="font-size:15px" t-field="o.date_to" />
+							</td>
+						</tr>
+						
+                        	</table>
+						          
+						         <br></br>
+						        
+						          </body>
+				      <body>
+
+					<table id="customers" style="width: 100%; border-spacing: 0px 10px; font-family: TimesNewRoman;">
+					<tr style="color: #fff; background:#91CDD7;">
+							<th style="text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;color: black;">Participants</span>
+							</th>
+						</tr>
+						<div >
+							<tr style="background:;">
+							
+							<td style="text-align:center;font-weight:bold; width:150px; height:20px;">Matricule
+									
+								</td>
+								<td  style="text-align:center;font-weight:bold; width:20px; height:20px;" colspan="2">Nom-Prénom
+									
+								</td>
+								
+								<td style="text-align:center;font-weight:bold; width:200px; height:20px;">Rôle
+								</td>
+							</tr>
+						</div>
+						
+						<div t-foreach="o.participant_ids" t-as="l">
+							<tr>
+							<td style="text-align:center; width:20px; height:20px;">
+									<span style="font-size:15px" t-field="l.matricule" />
+								</td>
+								<td style="text-align:left; width:20px; height:20px;" colspan="2">
+									<span style="font-size:15px" t-field="l.participant_id" />
+								</td>
+								<td style="text-align:center; width:20px; height:20px;">
+									<span style="font-size:15px" t-field="l.role_mission_id" />
+								</td>
+							</tr>
+						</div>
+
+
+					</table>
+					</body>
+					<br></br>
+					<br></br>
+					
+					
+					<body>
+
+						<table id="customers" style="width: 100%; font-family: TimesNewRoman;">
+						<tr style="color: #fff; background:#91CDD7;">
+							<th style="text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;color: black;">Itinéraire</span>
+							</th>
+						</tr>
+					<tr>
+							<td style="text-align:center;" t-if="o.itineraire_mission_ids"
+								colspan="4">
+								<span style="font-size:15px;"
+									t-foreach="o.itineraire_mission_ids" t-as="i">
+									<span style="text-align:left;" t-field="i.loc_id.name" />
+									-                    
+								</span>
+							</td>
+						</tr>
+					</table>
+					</body>
+					<br></br>
+					<div class="row justify-content-between shadowbox"
+						t-if="o.company_id.show_signature" >
+						<div class="col-6 text-left">
+							<span  style="font-family: bold;" t-field="o.signataire1_id.signature" />
+						</div>
+						<div class="col-6 text-right">
+							<span style="font-family: bold;" t-field="o.signataire2_id.signature" />
+						</div>
+					</div>
+				</div>
+					
+					<div class="col-6 ">
+                    <p>Ouagadougou le,<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%y %H:%M')"/></p>						</div>
+				     <br></br>
+					<br></br>
+				   
+				<div class="footer">
+					<div class="row">
+						<div class="col-xs-2 pull-left">
+							<small>
+								<span>Page</span>
+								<span class="page" />
+								/
+								<span class="topage" />
+							</small>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_mission_interieur_group_nocar">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_mission_interieur_group_nocar_document"
+						t-lang="lang" />
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>
+					

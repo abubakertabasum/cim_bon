@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_paiement_participant_wizard" model="ir.ui.view">
+		<field name="name">paiement.participant.wizard.form</field>
+		<field name="model">paiement.participant.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="participant_id" />
+						<field name="mission_id" />
+						<field name="currency_id" invisible="1" />
+						<field name="montant_paye" />
+						<field name="reste_a_payer" />
+					</group>
+					<group>
+						<field name="type" readonly="1" />
+						<field name="date_paiement" />
+						<field name="montant_a_payer"/>
+						<field name="have_payment" invisible="1"/>
+					</group>
+				</group>
+				<field name="frais_ids" attrs="{'invisible': [('have_payment', '!=', False)]}" />
+				<group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('have_payment', '!=', False)]}" >
+					<field name="frais_total" class="oe_subtotal_footer_separator" />
+				</group>
+				<footer>
+					<button name="action_confirm" string="Confirmer"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_paiement_participant_wizard"
+		model="ir.actions.act_window">
+		<field name="name">Paiement</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">paiement.participant.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_paiement_participant_wizard" />
+		<field name="target">new</field>
+	</record>
+
+</odoo>
+        

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+		
+		 <!--
+        Mission type
+        -->
+		<record id="data_mission_type_internal" model="cim.mission.type">
+            <field name="name">Mission à l'intérieur</field>
+        </record>
+        
+        <record id="data_mission_type_external" model="cim.mission.type">
+            <field name="name">Mission à l'extérieur</field>
+        </record>
+        
+        <!--
+        Mission type
+        -->
+		<record id="data_mission_order_type_individual" model="cim.type.ordre.mission">
+            <field name="name">Individuel</field>
+            <field name="code">I</field>
+        </record>
+        
+        <record id="data_mission_order_type_grouped" model="cim.type.ordre.mission">
+            <field name="name">Groupé</field>
+            <field name="code">G</field>
+        </record>
+        
+        <!--
+        Budget type
+        -->
+		<record id="data_budget_type_bo" model="cim.budget.type">
+            <field name="name">Budget Objet</field>
+            <field name="code">BO</field>
+        </record>
+        
+        <record id="data_budget_type_bp" model="cim.budget.type">
+            <field name="name">Budget Programme</field>
+            <field name="code">BP</field>
+        </record>
+        
+        <!--
+        Company zone (mission interne)
+        -->
+		<record id="data_cim_company_zone_a" model="cim.zone.mission">
+            <field name="name">Zone A</field>
+        </record>
+        
+        <record id="data_cim_company_zone_b" model="cim.zone.mission">
+            <field name="name">Zone B</field>
+        </record>
+        
+        <record id="data_cim_company_zone_c" model="cim.zone.mission">
+            <field name="name">Zone C</field>
+        </record>
+        
+        <!--
+        Company zone (mission externe)
+        -->
+		<record id="data_cim_company_zone_i" model="cim.zone.mission">
+            <field name="name">Zone I</field>
+        </record>
+        
+        <record id="data_cim_company_zone_ii" model="cim.zone.mission">
+            <field name="name">Zone II</field>
+        </record>
+        
+        <record id="data_cim_company_zone_iii" model="cim.zone.mission">
+            <field name="name">Zone III</field>
+        </record>
+        
+        <!--
+        Categ agent
+        -->
+		<record id="data_cim_employee_categ1" model="cim.employee.categ">
+            <field name="name">Catégorie I</field>
+        </record>
+        
+        <record id="data_cim_employee_categ2" model="cim.employee.categ">
+            <field name="name">Catégorie II</field>
+        </record>
+        
+        <record id="data_cim_employee_categ3" model="cim.employee.categ">
+            <field name="name">Catégorie III</field>
+        </record>
+        
+        <record id="data_cim_employee_categ4" model="cim.employee.categ">
+            <field name="name">Catégorie IV</field>
+        </record>
+
+        <!--
+        Nature de pièces justificatives
+        -->
+		<record id="data_pj_pv" model="cim.nature.pj">
+            <field name="name">Procès verbale</field>
+            <field name="code">PV</field>
+        </record>
+        
+        <record id="data_pj_ra" model="cim.nature.pj">
+            <field name="name">Rapport d'activité</field>
+            <field name="code">RA</field>
+        </record>
+        
+        <record id="data_pj_rt" model="cim.nature.pj">
+            <field name="name">Rapport technique</field>
+            <field name="code">RT</field>
+        </record>
+        
+        <record id="data_pj_rf" model="cim.nature.pj">
+            <field name="name">Rapport financier</field>
+            <field name="code">RF</field>
+        </record>
+        
+        <record id="data_pj_cocm" model="cim.nature.pj">
+            <field name="name">Communication Orale en Conseil des Ministres</field>
+            <field name="code">COCM</field>
+        </record>
+        
+        <record id="data_pj_rec" model="cim.nature.pj">
+            <field name="name">Reçu</field>
+            <field name="code">REC</field>
+        </record>
+        
+        <record id="data_pj_bc" model="cim.nature.pj">
+            <field name="name">Bon de commande</field>
+            <field name="code">BC</field>
+        </record>
+        
+        <!--
+        Role mission
+        -->
+		<record id="data_cim_role_mission_d" model="cim.role.mission">
+            <field name="name">Chauffeur</field>
+            <field name="code">D</field>
+        </record>
+        
+        <record id="data_cim_role_mission_m" model="cim.role.mission">
+            <field name="name">Chef de mission</field>
+            <field name="code">M</field>
+        </record>
+        
+        <record id="data_cim_role_mission_p" model="cim.role.mission">
+            <field name="name">Participant</field>
+            <field name="code">P</field>
+        </record>
+        
+        
+        <!--
+        Type de carrosserie
+        -->
+		<record id="data_cim_type_carrosserie_berline" model="cim.type.carrosserie">
+            <field name="name">Berline</field>
+        </record>
+        
+        <record id="data_cim_type_carrosserie_cabriolet" model="cim.type.carrosserie">
+            <field name="name">Cabriolet</field>
+        </record>
+        
+        <record id="data_cim_type_carrosserie_coupe" model="cim.type.carrosserie">
+            <field name="name">Coupé</field>
+        </record>
+        
+        <record id="data_cim_type_carrosserie_pickup" model="cim.type.carrosserie">
+            <field name="name">Pick-Up</field>
+        </record>
+        
+        <record id="data_cim_type_carrosserie_limousine" model="cim.type.carrosserie">
+            <field name="name">Limousine</field>
+        </record>
+        
+        
+        <!--
+        Type de carburant
+        -->
+		<record id="data_cim_type_carburant_gasoline" model="cim.type.carburant">
+            <field name="name">Essence</field>
+        </record>
+        
+        <record id="data_cim_type_carburant_diesel" model="cim.type.carburant">
+            <field name="name">Diesel</field>
+        </record>
+        
+        <record id="data_cim_type_carburant_electrique" model="cim.type.carburant">
+            <field name="name">Electrique</field>
+        </record>
+        
+        <record id="data_cim_type_carburant_hybride" model="cim.type.carburant">
+            <field name="name">Hybride</field>
+        </record>
+
+
+         <!--
+        Mission Sequence
+        -->
+        
+         <record id="sequence_cocm_seq" model="ir.sequence">
+			<field name="name">Default COCM sequence</field>
+			<field name="code">cim.cocm.seq</field>
+			<field name="prefix"></field>
+			<field name="suffix">-%(year)s/prefix1/prefix2</field>
+			<field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+		</record>
+        
+        <record id="sequence_mission_seq" model="ir.sequence">
+			<field name="name">Default Mission sequence</field>
+			<field name="code">cim.mission.seq</field>
+			<field name="prefix">%(year)s/</field>
+			<field name="suffix">/prefix1/prefix2</field>
+			<field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+		</record>
+		
+		<record id="sequence_dmd_mission_seq" model="ir.sequence">
+			<field name="name">Default Demande Mission sequence</field>
+			<field name="code">cim.dmd.mission.seq</field>
+			<field name="prefix">%(year)s/</field>
+			<field name="suffix">/prefix1/prefix2</field>
+			<field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+		</record>
+		
+		<record id="sequence_name_mission_seq" model="ir.sequence">
+			<field name="name">Default Name Mission sequence</field>
+			<field name="code">cim.name.mission.seq</field>
+			<field name="prefix">#</field>
+			<field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+		</record>
+		
+		<record id="sequence_ordre_mission_seq" model="ir.sequence">
+			<field name="name">Default Mission Order sequence</field>
+			<field name="code">cim.ordre.mission.seq</field>
+			<field name="prefix"></field>
+			<field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+		</record>
+        
+		
+		<!-- Renommer menu employer --> 
+		<record model="ir.ui.menu" id="hr.menu_hr_root">
+   			<field name="name" >Agents</field>
+		</record>
+		
+		<record model="ir.ui.menu" id="hr.menu_open_view_employee_list_my">
+   			<field name="name" >Agents</field>
+		</record>
+		
+	</data>
+</odoo>

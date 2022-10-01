@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- Mission Rejet view form -->
+	<record model="ir.ui.view" id="cim_mission_rejet_wizard_form">
+		<field name="name">cim.mission.rejet.wizard.form</field>
+		<field name="model">cim.mission.rejet.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Rejet des missions">
+				<group>
+					<group>
+						<field name="num_rejet" />
+						<field name="mission_id" invisible="1"/>
+						<field name="motif_rejet_id" />
+						<field name="auteur_rejet_id" />
+						<field name="date_rejet" />
+					</group>
+					<group>
+						<field name="state_rejet_debut" />
+						<field name="state_rejet_debut" />
+					</group>
+				</group>
+				<group>
+					<field name="description_rejet" />
+				</group>
+				
+				<footer>
+					<button name="action_confirm" string="Confirmer"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+				
+			</form>
+		</field>
+	</record>
+
+	<record id="action_mission_rejet_wizard"
+		model="ir.actions.act_window">
+		<field name="name">Rejet Mission</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">cim.mission.rejet.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="cim_mission_rejet_wizard_form" />
+		<field name="target">new</field>
+	</record>
+
+</odoo>
+        

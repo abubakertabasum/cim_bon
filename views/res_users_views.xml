@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<data>
+
+		<record id="view_cim_users_inherit_tree" model="ir.ui.view">
+			<field name="name">cim.users.inherit.tree</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_tree" />
+			<field name="arch" type="xml">
+				<field name="lang" position="replace">
+				</field>
+				<field name="login" position="after">
+					<field name="email" string="Email" />
+				</field>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_cim_users_inherit_form">
+			<field name="name">cim.res.users.inherit.form</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//div[@class='oe_title']" position="replace">
+					<div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
+                            <label for="login" class="oe_edit_only" string="Identifiant"/>
+                            <h2><field name="login"/></h2>
+                            <group>
+                            	<field name="email" string="Email" required="1"/>
+                                <field name="partner_id" readonly="1" required="0" groups="base.group_no_one" attrs="{'invisible': [('id', '=', False)]}"/>
+                            </group>
+                        </div>
+				</xpath>
+				<xpath expr="//page[@name='access_rights']/group" position="replace">
+				    <group string="Multi Structures" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
+	                       <field string="Structures autorisées" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
+	                       <field string="Structure courante" name="company_id" context="{'user_preference': 0}"/>
+	                       <field string="Nombre de structures" name="companies_count" invisible="1"/>
+	                </group>
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="view_cim_users_form_simple_modif" model="ir.ui.view">
+			<field name="name">cim.res.users.preferences.form</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form_simple_modif" />
+			<field name="arch" type="xml">
+				<field name="name" position="attributes">
+					<attribute name="readonly">0</attribute>
+					<attribute name="required">1</attribute>
+				</field>
+				<field name="company_id" position="attributes">
+					<attribute name="string">Structure</attribute>
+				</field>
+				<xpath expr="//group[@name='preferences']" position="after">
+					<group string="Accès CIM">
+						<field name="groups_id" readonly="1" widget="many2many_checkboxes" nolabel="1" domain="[('category_id','=', %(cim.module_cim_management)d)]"/>					
+					</group>
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="view_cim_users_form" model="ir.ui.view">
+            <field name="name">cim.res.users.form</field>
+            <field name="model">res.users</field>
+            <field eval="0" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <header>
+                    </header>
+                    <sheet>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
+                        <field name="active_partner" required="0" readonly="1" invisible="1"/>
+                        <div class="alert alert-info text-center o_form_header"
+                            attrs="{'invisible': [
+                                '|', '|',
+                                '&amp;', ('active', '=', True), ('active_partner', '=', True),
+                                '&amp;', ('active', '=', False), ('active_partner', '=', False),
+                                '&amp;', ('active', '=', True), ('active_partner', '=', False),
+                            ]}"
+                            role="alert">
+                          <a class="close" data-dismiss="alert" href="#">x</a>
+                          <div>
+                            <strong>Le contact associé à cet utilisateur est toujours actif</strong>
+                          </div>
+                          <div>Vous pouvez archiver le contact
+                            <field name="partner_id" required="0" readonly="1"/>
+                          </div>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
+                            <label for="login" class="oe_edit_only" string="Identifiant"/>
+                            <h2><field name="login"/></h2>
+                            <group>
+                            	<field name="email" string="Email" required="1" />
+                                <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
+                                        attrs="{'invisible': [('id', '=', False)]}"/>
+                            </group>
+                        </div>
+                        <notebook colspan="4">
+                            <page name="access_rights" string="Droits d'accès">
+                                <group string="Multi Structures" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
+                                    <field string="Structures autorisées" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
+	                        		<field string="Structure courante" name="company_id" context="{'user_preference': 0}"/>
+                                    <field string="Nombre de structures" name="companies_count" invisible="1"/>
+                                </group>
+                                <group string="Accès CIM">
+									<field name="groups_id" widget="many2many_checkboxes" nolabel="1" domain="[('category_id','=', %(cim.module_cim_management)d)]"/>					
+								</group>
+                            </page>
+                            <page string="Préférences">
+                                <group>
+                                    <group string="Localisation" name="preferences">
+                                        <field name="lang"/>
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
+                                        <field name="tz_offset" invisible="1"/>
+                                    </group>
+                                    <group string="Personnalisation des menus" groups="base.group_no_one">
+                                        <field name="action_id"/>
+                                    </group>
+                                </group>
+                                <group string="Messagerie et social" name="messaging">
+                                    <field name="signature"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- Modify the action of res_users -->
+		<record id="base.action_res_users" model="ir.actions.act_window">
+			<field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_users_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('base.view_users_form')})]"
+			/>
+		</record>
+		
+		<!-- create a new action of res_users -->
+		<record id="action_cim_res_users" model="ir.actions.act_window">
+            <field name="name">Utilisateurs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="base.view_users_tree"/>
+            <field name="search_view_id" ref="base.view_users_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_users_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('cim.view_cim_users_form')})]"
+			/>
+            <field name="context">{'search_default_no_share': 1}</field>
+            <field name="help">Créez et gérez les utilisateurs qui se connecteront au système. Les utilisateurs peuvent être désactivés un certain temps pendant lequel ils ne pourront/devront pas se connecter au système. Vous pouvez leur assigner un groupe pour leur fournir des accès spécifiques aux applications qu'ils ont besoin d'utiliser dans le système.</field>
+        </record>
+
+		<!-- cacher l'action change password -->
+		<record id="base.change_password_wizard_action" model="ir.actions.act_window">
+			<field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>
+		</record>
+		
+		<!-- Menu Utilisateur -->
+		<menuitem name="Utilisateurs" id="menu_cim_utilisateur"
+			parent="menu_cim_admin_fonctionnel" groups="cim.group_admin_central,cim.group_admin_fonctionnel" action="action_cim_res_users"
+			sequence="10" />
+		
+	</data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	<template id="cim_external_layout_header" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='header']" position='replace'>
+            <div class="header">
+               <!--  <div class="col-xs-3" style="border-bottom: 0.5px solid black;" dir="rtl">
+                    <div class="row">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 75px; max-width: 95px" alt="Logo" />
+                    </div>
+                    <div class="row">
+                        <p t-field="company.street" > </p>
+                    </div>
+                    <div class="row">
+                        <p t-field="company.name" > </p>
+                    </div>
+                </div> -->
+            </div>
+        </xpath>
+    </template>
+
+    <template id="cim_external_layout_footer" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='footer o_standard_footer']" position='replace'>
+            <!-- <div class="footer o_standard_footer">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+					Page: <span class="page"/> / <span class="topage"/>
+				</div>
+            </div> -->
+        </xpath>
+    </template>
+    
+    	</data>
+</odoo>

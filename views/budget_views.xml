@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<!-- action Lignes budgétaires -->
+    	<record model="ir.actions.act_window" id="action_view_budget_line">
+			<field name="name">Lignes budgétaires</field>
+			<field name="res_model">cim.budget.line</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('budget_id', '=', active_id)]</field>
+		</record>
+
+		<!-- Budget form view -->
+		<record model="ir.ui.view" id="cim_budget_form">
+			<field name="name">cim.budget.form</field>
+			<field name="model">cim.budget</field>
+			<field name="arch" type="xml">
+				<form string="Budget">
+					<header>
+						<field name="state" widget="statusbar"
+							statusbar_visible="new,validated" />
+						<button name="act_validate" string="Valider" states="new"
+							type="object" class="oe_highlight" />
+						<button name="act_in_progress" states="validated"
+							string="Annuler" type="object" />
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button type="action" class="oe_stat_button" icon="fa-pencil-square-o" name="%(action_view_budget_line)d" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Lignes budgétaires</span>
+		                        </div>
+		                    </button>
+						</div>
+						<div class="oe_title">
+							<h1 position="after">
+								<label for="name" class="oe_edit_only" />
+								<h3>
+									<field name="name" />
+								</h3>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="exercice_id" />
+								<field name="budget_type_id" />
+								<field name="montant_budget" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								<field name="company_id" readonly="1"/>
+								<field name="currency_id" invisible="1" />
+							</group>
+						</group>
+						<notebook>
+							<page string='Lignes budgétaires'>
+								<field name="budget_line_ids">
+									<tree editable="bottom">
+										<field name="programme_id" domain="[('state','=','validated')]"/>
+										<field name="sectionbudgetaire_id" string="Section" />
+										<field name="programmechapitre_id" />
+										<field name="actionarticle_id" />
+										<field name="activiteparagraphe_id" />
+										<field name="paragrapherubrique_id" />
+										<field name="company_id" invisible="1" />
+										<field name="currency_id" invisible="1" />
+										<field name="montant" widget="monetary"
+											options="{'currency_field': 'currency_id'}" />
+										<field name="credit_dispo" widget="monetary" readonly="1"
+											options="{'currency_field': 'currency_id'}" />
+									</tree>
+								</field>
+								<group class="oe_subtotal_footer oe_right" colspan="2"
+									name="total">
+									<div
+										class="oe_subtotal_footer_separator oe_inline o_td_label">
+										<label for="total" />
+									</div>
+									<field name="total" nolabel="1" widget="monetary"
+										options="{'currency_field': 'currency_id'}"
+										class="oe_subtotal_footer_separator" />
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+
+		<!-- Budget tree view -->
+		<record model="ir.ui.view" id="cim_budget_tree">
+			<field name="name">cim.budget.tree</field>
+			<field name="model">cim.budget</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="exercice_id" />					
+					<field name="state" />
+					<field name="company_id" />
+					<field name="budget_type_id" />
+					<field name="montant_budget" />
+					<field name="total" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="budget_menu_action" model="ir.actions.act_window">
+			<field name="name">Budget</field>
+			<field name="res_model">cim.budget</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"></p>
+			</field>
+		</record>
+		
+		
+		
+		<!-- Budget line tree view -->
+		<record model="ir.ui.view" id="cim_budget_line_tree">
+			<field name="name">cim.budget.line.tree</field>
+			<field name="model">cim.budget.line</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="programme_id" />
+					<field name="sectionbudgetaire_id" />
+					<field name="programmechapitre_id" />
+					<field name="actionarticle_id" />
+					<field name="activiteparagraphe_id" />
+					<field name="paragrapherubrique_id" />
+					<field name="company_id" invisible="1"/>
+					<field name="currency_id" invisible="1"/>
+					<field name="montant" options="{'currency_field': 'currency_id'}" />
+					<field name="credit_dispo" options="{'currency_field': 'currency_id'}" />
+				</tree>
+			</field>
+		</record>
+		
+		<!--budget line form view -->
+		<record model="ir.ui.view" id="cim_budget_line_form">
+			<field name="name">cim.budget.line.form</field>
+			<field name="model">cim.budget.line</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<group>
+								<field name="programme_id" />
+								<field name="sectionbudgetaire_id" />
+								<field name="programmechapitre_id" />
+								<field name="actionarticle_id" />
+								<field name="activiteparagraphe_id" />
+								<field name="paragrapherubrique_id" />
+								<field name="company_id" invisible="1"/>
+								<field name="currency_id" invisible="1"/>
+								<field name="montant" options="{'currency_field': 'currency_id'}" />
+								<field name="credit_dispo" options="{'currency_field': 'currency_id'}" />
+							</group>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Exercice budgetaire view filter -->
+		<record id="view_cim_exercice_budgetaire_filter" model="ir.ui.view">
+            <field name="name">cim.exercice.budgetaire.filter</field>
+            <field name="model">cim.exercice.budgetaire</field>
+            <field name="arch" type="xml">
+                <search string="Exercice budgetaire">
+                    <field name="name"/>
+                    <separator/>
+                    <filter domain="['|',('active', '=', True),('active', '=', False)]" string="Tous" name="all"/>
+                    <separator />
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_date_from" string="Date" context="{'group_by':'date_from:year'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<!-- Exercice budgetaire form view -->
+		<record model="ir.ui.view" id="cim_exercice_budgetaire_form">
+			<field name="name">cim.exercice.budgetaire.form</field>
+			<field name="model">cim.exercice.budgetaire</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<field name="state" widget="statusbar" statusbar_visible="elaboration,execution,clos" />
+						<button name="act_execute" states="elaboration"
+							string="Exécuter" type="object" class="oe_highlight" 
+							confirm="Vous êtes sur le point de placer l'exercice en exécution. Désirez vous poursuivre l'opération?"/>
+						<button name="act_annuler" states="execution"
+							string="Annuler" type="object"/>
+						<button name="act_cloturer" states="execution"
+							string="Clôturer" type="object" class="oe_highlight" 
+							confirm="Vous êtes sur le point de clôturer un exercice budgétaire. Désirez-vous continuer?"/>
+					</header>
+					<sheet>
+						<!--  
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" string="Ouvert" widget="boolean_button"
+									options='{"terminology": "Fermer"}' />
+							</button>
+						</div>
+						-->
+						<group>
+							<group >
+								<field name="name" attrs="{'readonly': [('state', 'in', ['execution','clos'])]}"/>
+								<field name="date_from" />
+								<field name="date_to" />
+								<field name="description" attrs="{'readonly': [('state', 'in', ['execution','clos'])]}"/>
+								<field name="active" attrs="{'readonly': [('state', '=', 'clos')]}" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Exercice budgetaire tree view -->
+		<record model="ir.ui.view" id="cim_exercice_budgetaire_tree">
+			<field name="name">cim.exercice.budgetaire.tree</field>
+			<field name="model">cim.exercice.budgetaire</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="date_from" />
+					<field name="date_to" />
+					<field name="description" />
+					<field name="state" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Vue formulaire de la section budgétaire -->
+		<record id="view_cim_sectionbudgetaire_form" model="ir.ui.view">
+			<field name="name">cim.sectionbudgetaire.form</field>
+			<field name="model">cim.sectionbudgetaire</field>
+			<field name="arch" type="xml">
+				<form string="Section budgétaire">
+					<sheet>
+						<group>
+							<group>							
+								<field name="company_id" string="Structure" />
+								<field name="code_section" string="Code section" placeholder="Code unique de 2 caractères"/>
+								<field name="name" string="Intitulé section" placeholder="Intitulé unique par la structure" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Vue tree de la section budgétaire -->
+		<record id="view_cim_sectionbudgetaire_tree" model="ir.ui.view">
+			<field name="name">cim.sectionbudgetaire.tree</field>
+			<field name="model">cim.sectionbudgetaire</field>
+			<field name="arch" type="xml">
+				<tree string="Section">
+					<field name="code_section" string="Code section"/>
+					<field name="name" string="Libellé section" />
+					<field name="company_id" string="Structure" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions sectionbudgetaire -->
+		<record model="ir.actions.act_window" id="cim_sectionbudgetaire_act">
+			<field name="name">Section</field>
+			<field name="res_model">cim.sectionbudgetaire</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Vue formulaire programmechapitre -->
+		<record id="view_cim_programmechapitre_form" model="ir.ui.view">
+			<field name="name">cim.programmechapitre.form</field>
+			<field name="model">cim.programmechapitre</field>
+			<field name="arch" type="xml">
+				<form string="Programme ou Chapitre">
+					<sheet>
+						<group>
+							<group>
+								<field name="company_id" string="Structure" />
+								<field name="sectionbudgetaire_id" string="Section" />
+								<field name="code_programmechapitre" string="Code" placeholder="Code unique de 3 caractères"/>
+								<field name="name" string="Programme/Chapitre" placeholder="Intitulé unique pour la structure" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Vue tree programmechapitre -->
+		<record id="view_cim_programmechapitre_tree" model="ir.ui.view">
+			<field name="name">cim.programmechapitre.tree</field>
+			<field name="model">cim.programmechapitre</field>
+			<field name="arch" type="xml">
+				<tree string="Programme ou Chapitre">
+					<field name="code_programmechapitre" string="Code" />
+					<field name="name" string="Programme/Chapitre" />
+					<field name="sectionbudgetaire_id" string="Section " />
+					<field name="company_id" string="Structure" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions programmechapitre -->
+		<record model="ir.actions.act_window" id="cim_programmechapitre_act">
+			<field name="name">Programme / Chapitre</field>
+			<field name="res_model">cim.programmechapitre</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		
+		<!-- Vue formulaire actionarticle -->
+		<record id="view_cim_actionarticle_form" model="ir.ui.view">
+			<field name="name">cim.actionarticle.form</field>
+			<field name="model">cim.actionarticle</field>
+			<field name="arch" type="xml">
+				<form string="Action ou Article">
+					<sheet>
+						<group>
+							<group>							
+								<field name="company_id" string="Structure" />
+								<field name="programmechapitre_id" string="Prog./Chap." />
+								<field name="code_actionarticle" string="Code" placeholder="Code unique de 5 caractères" />
+								<field name="name" string="Action/Article" placeholder="Intitulé unique pour la structure"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Vue tree actionarticle -->
+		<record id="view_cim_actionarticle_tree" model="ir.ui.view">
+			<field name="name">cim.actionarticle.tree</field>
+			<field name="model">cim.actionarticle</field>
+			<field name="arch" type="xml">
+				<tree string="Action ou Article">
+					<field name="code_actionarticle" string="Code" />
+					<field name="name" string="Action/Article" />
+					<field name="programmechapitre_id" string="Prog./Chap." />
+					<field name="company_id" string="Structure" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Actions actionarticle -->
+		<record model="ir.actions.act_window" id="cim_actionarticle_act">
+			<field name="name">Action / Article</field>
+			<field name="res_model">cim.actionarticle</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Vue formulaire activiteparagraphe -->
+		<record id="view_cim_activiteparagraphe_form" model="ir.ui.view">
+			<field name="name">cim.activiteparagraphe.form</field>
+			<field name="model">cim.activiteparagraphe</field>
+			<field name="arch" type="xml">
+				<form string="Activité ou Paragraphe">
+					<sheet>
+						<group>
+							<group>
+								<field name="company_id" string="Structure" />
+								<field name="actionarticle_id" string="Action/Article" />
+								<field name="code_activiteparagraphe" string="Code" placeholder="Code unique sur 7 caractères" />
+								<field name="name" string="Activité/Paragraphe" placeholder="Intitulé unique pour la structure" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Vue tree activiteparagraphe -->
+		<record id="view_cim_activiteparagraphe_tree" model="ir.ui.view">
+			<field name="name">cim.activiteparagraphe.tree</field>
+			<field name="model">cim.activiteparagraphe</field>
+			<field name="arch" type="xml">
+				<tree string="Activité ou Paragraphe">
+					<field name="code_activiteparagraphe"/>
+					<field name="name" string="Activité/Paragraphe" />
+					<field name="actionarticle_id" string="Action/Article" />
+					<field name="company_id" string="Structure" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions activiteparagraphe -->
+		<record model="ir.actions.act_window" id="cim_activiteparagraphe_act">
+			<field name="name">Activité / Paragraphe</field>
+			<field name="res_model">cim.activiteparagraphe</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Vue formulaire paragrapherubrique -->
+		<record id="view_cim_paragrapherubrique_form" model="ir.ui.view">
+			<field name="name">cim.paragrapherubrique.form</field>
+			<field name="model">cim.paragrapherubrique</field>
+			<field name="arch" type="xml">
+				<form string="Paragraphe ou Rubrique">
+					<sheet>
+						<group>
+							<group>
+								<field name="company_id" string="Structure" />
+								<field name="activiteparagraphe_id" string="Activité/Parag." />
+								<field name="code_paragrapherubrique" string="Code" placeholder="Code unique sur 10 caractères"/>
+								<field name="name" string="Paragraphe/Rubrique" placeholder="Intitulé unique pour la structure"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Vue tree paragrapherubrique -->
+		<record id="view_cim_paragrapherubrique_tree" model="ir.ui.view">
+			<field name="name">cim.paragrapherubrique.tree</field>
+			<field name="model">cim.paragrapherubrique</field>
+			<field name="arch" type="xml">
+				<tree string="Paragraphe ou Rubrique">
+					<field name="code_paragrapherubrique"/>
+					<field name="name" string="Paragraphe/Rubrique" />
+					<field name="activiteparagraphe_id" string="Activité/Parag." />
+					<field name="company_id" string="Structure" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions paragrapherubrique -->
+		<record model="ir.actions.act_window" id="cim_paragrapherubrique_act">
+			<field name="name">Paragraphe / Rubrique</field>
+			<field name="res_model">cim.paragrapherubrique</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Budget type tree view -->
+		<record id="view_cim_budget_type_tree" model="ir.ui.view">
+			<field name="name">cim.budget.type.tree</field>
+			<field name="model">cim.budget.type</field>
+			<field name="arch" type="xml">
+				<tree string="Type de budget">
+					<field name="code" />
+					<field name="name" />
+					<field name="description" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+		
+		
+		<!-- Budget type form view -->
+		<record id="view_cim_budget_type_form" model="ir.ui.view">
+			<field name="name">cim.budget.type.form</field>
+			<field name="model">cim.budget.type</field>
+			<field name="arch" type="xml">
+				<form string="Type de budget">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button"
+									options='{"terminology": "archive"}' />
+							</button>
+						</div>
+						<group>
+							<group>
+								<field name="code" placeholder="Code unique sur 5 caractères" />
+								<field name="name" placeholder="Intitulé unique du type de budget" />
+								<field name="description" />
+								<field name="active" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="budget_type_menu_action" model="ir.actions.act_window">
+			<field name="name">Type budget</field>
+			<field name="res_model">cim.budget.type</field>
+			<field name="view_mode">tree,form</field>			
+		</record>
+		
+		<record id="exercice_budgetaire_act"
+			model="ir.actions.act_window">
+			<field name="name">Exercice budgétaire</field>
+			<field name="res_model">cim.exercice.budgetaire</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{'search_default_all': 1}</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face">
+					Créez un nouvel exercice budgétaire.
+				</p>
+				<p>
+					CIM vous aide à gérer facilement vos Exercices budgétaire.
+				</p>
+			</field>
+		</record>
+
+		<!-- Sous menu de parametres -->
+		<menuitem name="Exercices budgétaire"
+			id="menu_cim_exercice_budgetaire" parent="menu_cim_admin_central"
+			sequence="5" action="exercice_budgetaire_act" />
+		
+		<!-- Menu company type -->
+		<menuitem name="Types de budget"
+			id="menu_cim_type_budget" parent="menu_cim_admin_central"
+			action="budget_type_menu_action"  />
+		
+		<menuitem name="Budgets" id="menu_cim_all_budget"
+			parent="menu_cim_admin_fonctionnel" sequence="800" action="budget_menu_action" />
+		
+			
+		<menuitem name="Section budgétaire" id="menu_cim_sectionbudgetaire"
+			parent="menu_cim_admin_fonctionnel" sequence="710" action="cim_sectionbudgetaire_act" />
+			
+		<menuitem name="Programme/Chapitre" id="menu_cim_programmechapitre"
+			parent="menu_cim_admin_fonctionnel" sequence="720" action="cim_programmechapitre_act" />
+		
+		<menuitem name="Action/Article" id="menu_cim_actionarticle"
+			parent="menu_cim_admin_fonctionnel" sequence="730" action="cim_actionarticle_act" />
+			
+		<menuitem name="Activité/Paragraphe" id="menu_cim_activiteparagraphe"
+			parent="menu_cim_admin_fonctionnel" sequence="740" action="cim_activiteparagraphe_act" />
+			
+		<menuitem name="Paragraphe/Rubrique" id="menu_cim_paragrapherubrique"
+			parent="menu_cim_admin_fonctionnel" sequence="750" action="cim_paragrapherubrique_act" />
+
+	</data>
+</odoo> 

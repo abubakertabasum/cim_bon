@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<!-- Localité report view filter -->
+		<record id="view_cim_localite_mission_report_filter" model="ir.ui.view">
+            <field name="name">cim.localite.mission.report.filter</field>
+            <field name="model">cim.localite.mission.report</field>
+            <field name="arch" type="xml">
+                <search string="Mission">
+                	<field name="loc_id"/>
+                    <field name="mission_id"/>
+                    <field name="state"/>
+                    <separator />
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <field name="department_id"/>
+                    <separator />
+                    <filter domain="[('state', '=', 'new')]" string="Nouvelles missions" name="new"/>
+                    <filter domain="[('state', '=', 'initiation')]" string="Missions initiées" name="initiation"/>
+                    <filter domain="[('state', '=', 'approbation')]" string="Missions approuvées" name="approbation"/>
+                    <filter domain="[('state', '=', 'budgeting')]" string="Missions budgétisées" name="budgeting"/>
+                    <filter domain="[('state', '=', 'validate_sg')]" string="Missions validées" name="validate_sg"/>
+                    <filter domain="[('state', '=', 'daf_payment')]" string="Missions payées" name="daf_payment"/>
+                    <filter domain="[('state', '=', 'checked')]" string="Missions vérifiées" name="checked"/>
+                    <filter domain="[('state', '=', 'done')]" string="Missions clôturées" name="done"/>
+                    <filter domain="[('state', '=', 'canceled')]" string="Missions annulées" name="canceled"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                    	<filter string="Localité" name="localite" domain="[]" context="{'group_by': 'loc_id'}"/>
+                    	<separator/>
+                        <filter string="Programme d'activités" name="project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Structure" name="structure" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Service demandeur" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <separator/>
+                        <filter string="Type de mission" name="type" domain="[]" context="{'group_by': 'mission_type_id'}"/>
+                        <filter string="Date début" name="date_from" domain="[]" context="{'group_by': 'date_from'}"/>
+                    	<filter string="Date fin" name="date_to" domain="[]" context="{'group_by': 'date_to'}"/>
+                        <filter string="Statut" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<record id="crm_localite_mission_report_view_graph" model="ir.ui.view">
+			<field name="name">cim.localite.mission.report.graph</field>
+			<field name="model">cim.localite.mission.report</field>
+			<field name="arch" type="xml">
+				<graph string="Analyse des localités" stacked="True">
+					<field name="mission_id" type="col" />
+					<field name="loc_id" type="row" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="crm_localite_mission_report_view_pivot" model="ir.ui.view">
+			<field name="name">cim.localite.mission.report.pivot</field>
+			<field name="model">cim.localite.mission.report</field>
+			<field name="arch" type="xml">
+				<pivot string="Analyse des localités" disable_linking="True">
+					<field name="loc_id" type="col" />
+					<field name="mission_id" type="row" />
+				</pivot>
+			</field>
+		</record>
+
+		<record id="cim_localite_mission_report_action"
+			model="ir.actions.act_window">
+			<field name="name">Analyse des localités</field>
+			<field name="res_model">cim.localite.mission.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,pivot</field>
+			<field name="domain">[]</field>
+		</record>
+
+		<menuitem name="Localités" id="menu_cim_analyses_localite_mission"
+			parent="menu_cim_synthese_analyses"
+			action="cim_localite_mission_report_action" sequence="30" />
+
+	</data>
+</odoo>

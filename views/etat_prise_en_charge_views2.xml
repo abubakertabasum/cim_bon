@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_etat_prise_en_charge_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page" style="page-break-after:always;page-break-inside: avoid;">
+					<h4 style="text-align:center;">
+						<div style="float:left;font-size:20px; font-weight:bold">
+							<div t-foreach="o.department_id" t-as="e">
+								<span t-field="e.timbre" />
+							</div>
+						</div>
+						<div style="float:right; padding:4px;">
+							<div style="padding:10px;text-align:center;">
+								<div style="font-size:20px; font-weight:bold;">BURKINA FASO</div>
+								<div style="font-size:20px;">**********</div>
+								<div style="font-size:20px;">Unité-Progrés-Justice</div>
+							</div>
+						</div>
+						
+						<div style="clear:both;"></div>
+						<br></br>
+						<div style="text-align:center;font-weight:bold;">
+							ETAT DE PRISE EN CHARGE DES FRAIS DE MISSION
+						</div>
+					
+					</h4>
+					<br></br>
+					
+					<div style="text-align:left;">
+						<b style="font-size:20px;">N° de la mission: </b> <span style="font-size:20px;" t-field="o.num_mission" /> <br></br>
+						<b style="font-size:20px;">Type de mission: </b> <span style="font-size:20px;" t-field="o.mission_type_id" /> <br></br>
+						<b style="font-size:20px;">Itinéraire:</b>
+						<span style="font-size:20px;" t-foreach="o.itineraire_mission_ids" t-as="i" >
+							<span style= "text-align:left;" t-field="i.loc_id.name" /> -
+						</span>						
+					</div>					
+					<br></br>					
+					<div style="text-align:left;" t-if="o.cocm_id">
+						<b>N° de la communication orale: </b> <span style="font-size:20px;" t-field="o.cocm_id" /> <br></br>
+						<b>Autorisée le: </b> <span style="font-size:20px;" t-field="o.cocm_id.date_autorisation" /> <br></br>
+					</div>					
+					<br></br>
+					
+					<table class="table table-bordered table-sm text-center border border-dark" border="1" style="border-collapse: collapse;width: 100%;">
+						<tr style="border:1px soild #000">
+							<th style="background-color:#CCC">Nom  Prénom et Catégorie</th>
+<!-- 							<th style="background-color:#CCC">Fonction ou rôle</th>
+ -->						<th style="background-color:#CCC">Localité</th>
+							<th style="background-color:#CCC">Elt. Dépense</th>
+							<th style="background-color:#CCC">Taux</th>
+							<th style="background-color:#CCC">Quantité</th>
+							<th style="background-color:#CCC">Autres frais</th>
+							<th style="background-color:#CCC">Montant</th>
+							<th style="background-color:#CCC">Type et no pièce</th>
+							<th style="background-color:#CCC">Emargement</th>
+						</tr>
+						<div>
+						<t t-set="name" t-value=""/>
+						<t t-set="loc" t-value=""/>
+						<t t-set="other" t-value=""/>
+						<t t-set="zone" t-value=""/>
+						
+							<div t-foreach="o.frais_ids" t-as="f">
+								<t t-if="f.product_id">
+							
+								<tr t-if="f.total_amount" style="border:1px soild #000">
+								
+									<t t-if="f.employee_id.id!=name">
+									
+									<!--  -->
+										<td style="border:1px soild #000" t-att-rowspan="f.employee_count(o.frais_ids, f.employee_id.id, f.employee_id.categ_id)">
+										<!--  -->
+	 										<t t-set="name" t-value="f.employee_id.id"/>
+	 										<span t-field="f.employee_id.name" /> - 
+	 										<span t-field="f.employee_id.matricule" /> <br></br>
+	 										<span t-field="f.employee_id.categ_id" />
+										</td>
+									</t>
+									<!-- <t t-if="f.localite_id.id!=loc and f.localite_id.zone_mission_id.id!=zone"> -->
+										<td style="border:1px soild #000" >
+	 										<t t-set="loc" t-value="f.localite_id.id"/>
+	 										<t t-set="zone" t-value="f.localite_id.zone_mission_id.id"/>
+											<span t-field="f.localite_id.name" /><br/>
+	 										(<span t-field="f.localite_id.zone_mission_id" />)
+										</td>
+									<!-- </t> -->
+									<t>
+										<td style="border:1px soild #000">
+											<span t-field="f.product_id" />
+										</td>
+									</t>
+									<t>
+									<td style="border:1px soild #000">
+										<span t-field="f.unit_amount" />
+									</td>
+									</t>
+									<t>
+									<td style="border:1px soild #000">
+										<span t-field="f.quantity" />
+									</td>
+									</t>
+									
+									<t t-if="f.employee_id.id!=other">
+										<t t-set="other" t-value="f.employee_id.id"/>
+										<td style="border:1px soild #000" t-att-rowspan="f.employee_count(o.frais_ids, f.employee_id.id, f.employee_id.categ_id)">
+											<span t-esc="'{:,.2f}'.format(o._compute_other_frais_total(other))" />
+										</td>
+									</t>
+									
+									<t>
+										<td style="border:1px soild #000">
+											<span t-field="f.total_amount" />
+										</td>
+									</t>
+									
+									 <t >
+										<td style="border:1px soild #000">
+										</td>
+									</t>
+									<t >
+										<td style="border:1px soild #000">
+										</td>
+									</t>
+								</tr>
+</t>							
+							</div>
+						</div>
+						<tr style="border:1px soild #000">
+							<th colspan="5">Total des indemnités de mission</th>
+							<th style="background-color:#CCC"><span t-field="o.total_only_frais_mission"/></th>
+						</tr>
+					</table>
+					<br></br>
+					<p>Arrêté le présent état de paiement à la somme de : <span t-esc="o.lettrer(o.total_only_frais_mission)" /> (<span t-field="o.total_only_frais_mission" />)</p>
+					<br></br>
+					
+					
+					 <div class="row justify-content-between">
+						<div class="col-6 text-left">
+							<span t-field="o.signataire1_id.signature"/>
+						</div>
+						<div class="col-6 text-right">
+							<span t-field="o.signataire2_id.signature"/>
+						</div>
+					</div> 
+					
+					<div style="clear:both;"></div>
+				</div>
+			</t>
+		</template>
+		
+
+		<template id="report_etat_prise_en_charge">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_etat_prise_en_charge_document" t-lang="lang" /></t>
+			</t>
+		</template>
+	</data>
+</odoo>

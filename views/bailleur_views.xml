@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<!-- Bailleur form view -->
+		<record model="ir.ui.view" id="cim_bailleur_form">
+			<field name="name">cim.bailleur.form</field>
+			<field name="model">cim.bailleur</field>
+			<field name="arch" type="xml">
+				<form string="Bailleur">
+					<sheet>
+						<group>
+							<group>
+								<field name="code" placeholder="Code unique sur 10 caractères max"/>
+								<field name="name" placeholder="Le nom du bailleur est unique"/>
+								<field name="sigle" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Bailleur tree view -->
+		<record model="ir.ui.view" id="cim_bailleur_tree">
+			<field name="name">cim.bailleur.tree</field>
+			<field name="model">cim.bailleur</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="code" />
+					<field name="name" />
+					<field name="sigle" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="bailleur_menu_action" model="ir.actions.act_window">
+			<field name="name">Bailleur</field>
+			<field name="res_model">cim.bailleur</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face"></p>
+			</field>
+		</record>
+
+
+		<menuitem name="Bailleurs" id="menu_cim_all_bailleur"
+			parent="menu_cim_admin_central" action="bailleur_menu_action" sequence="900" />
+
+	</data>
+</odoo> 

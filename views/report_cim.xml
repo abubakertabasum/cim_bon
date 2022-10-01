@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+		
+	<report
+            id="cim_mission_order"
+            model="cim.mission"
+            string="Demande d'autorisation de la mission"
+            report_type="qweb-pdf"
+            name="cim.report_mission_order"
+            file="cim.report_mission_order"
+            print_report_name="'Demande d\'autorisation de la mission %s' %(object.name)"
+            menu="False"
+        />
+    <report
+            id="cim_mission_final"
+            model="cim.mission"
+            string="Rapport de mission"
+            report_type="qweb-pdf"
+            name="cim.report_mission_final"
+            file="cim.report_mission_final"
+            print_report_name="'mission %s' %(object.name)"
+            menu="False"
+        />
+        
+         <report
+            id="cim_mission_interieur"
+            model="cim.mission"
+            string="OM individuel"
+            report_type="qweb-pdf"
+            name="cim.report_mission_interieur"
+            file="cim.report_mission_interieur"
+            print_report_name="'Ordre de mission à l\'intérieur individuel'"
+            menu="False"
+        />
+       
+         <report
+            id="cim_mission_interieur_group"
+            model="cim.mission"
+            string="OM groupé"
+            report_type="qweb-pdf"
+            name="cim.report_mission_interieur_group"
+            file="cim.report_mission_interieur_group"
+            print_report_name="'Ordre de mission à l\'intérieur groupé'"
+            menu="False"
+        />
+        
+        <report
+            id="cim_mission_interieur_group_nocar"
+            model="cim.mission"
+            string="OM groupé sans vehicule interne"
+            report_type="qweb-pdf"
+            name="cim.report_mission_interieur_group_nocar"
+            file="cim.report_mission_interieur_group_nocar"
+            print_report_name="'Ordre de mission à l\'intérieur groupé'"
+            menu="False"
+        />
+        
+        <report
+            id="cim_mission_exterieur"
+            model="cim.mission"
+            string="Rapport de mission"
+            report_type="qweb-pdf"
+            name="cim.report_mission_exterieur"
+            file="cim.report_mission_exterieur"
+            print_report_name="'mission %s' %(object.name)"
+            menu="False"
+        />
+        
+        
+         <report
+            id="cim_etat_prise_en_charge"
+            model="cim.mission"
+            string="Rapport de mission"
+            report_type="qweb-pdf"
+            name="cim.report_etat_prise_en_charge"
+            file="cim.report_etat_prise_en_charge"
+            print_report_name="'mission %s' %(object.num_mission)"
+            menu="False"
+        />
+        
+        
+        <report
+            id="cim_etat_carburant"
+            model="cim.mission"
+            string="Rapport du carburant"
+            report_type="qweb-pdf"
+            name="cim.report_etat_carburant"
+            file="cim.report_etat_carburant"
+            print_report_name="'mission %s' %(object.num_mission)"
+            menu="False"
+        />
+        
+           <report
+            id="cim_mission_synthese"
+            model="cim.mission"
+            string="Rapport de mission"
+            report_type="qweb-pdf"
+            name="cim.report_mission_synthese"
+            file="cim.report_mission_synthese"
+            print_report_name="'mission %s' %(object.name)"
+            menu="False"
+        />
+        
+       <!-- attachment="(object.state in ('budgeting','validate_auth','closed')) and ((object.sequence_id or '').replace('/','')+'.pdf')"  -->
+    	
+    	<record id="cim_etat_prise_en_charge" model="ir.actions.report">
+            <field name="paperformat_id" ref="cim.paperformat_frais_mission"/>
+        </record>
+    
+    </data>
+</odoo>

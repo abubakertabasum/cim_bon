@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_mission_order_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page">
+					<h4 style="text-align:center;">
+						<div class="row justify-content-between">
+							<div class="col-4"
+								style="float:left;font-size:15px; font-weight:bold">
+								<div t-foreach="o.department_id" t-as="e">
+									<span t-field="e.timbre" />
+								</div>
+							</div>
+							<div class="col-4 mb4">
+			                    <img t-if="o.establishment_id.logo" t-att-src="image_data_uri(o.establishment_id.logo)" style="width:50%;" alt="Logo"/>
+			                </div>
+							<div class="col-4 text-right"
+								style="float:right; padding:2px;">
+								<div style="padding:5px;text-align:center;">
+									<div style="font-size:15px; font-weight:bold;">BURKINA FASO</div>
+									<div style="font-size:15px;">**********</div>
+									<div style="font-size:15px;">Unité-Progrés-Justice</div>
+								</div>
+							</div>
+						</div>
+						<div style="clear:both;"></div>
+						<br></br>
+						<div>
+							Date :
+							<span t-field="o.date_from" />
+						</div>
+						<div>Demande d'autorisation du projet de mission n° </div>
+						<span t-field="o.num_demande" />
+					</h4>
+					<br></br>
+					<!-- <div style="text-align:center;"> -->
+					<!-- <span style="font-size:22px;padding:5px"> -->
+					<!-- Demande addressée à -->
+
+					<!-- <span t-field="o.establishment_id.ordonnateur_id"/>, -->
+					<!-- <span t-field="o.establishment_id.ordonnateur_id.matricule"/> -->
+
+					<!-- <span t-field="o.establishment_id.ordonnateur_id.job_id"/></span> -->
+					<!-- </div> -->
+					<div style="font-weight : 600;float:left ;gras;">Demandeur : </div>
+					<span style="padding:15px;" t-field="o.employee_id" />
+					, matricule
+					<span style="padding:5px;" t-field="o.employee_id.matricule" />
+					,
+					<span style="padding:5px;" t-field="o.employee_id.job_id" />
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Demande l'autorisation d'effectuer la mission
+						ci-après :</div>
+					<br></br>
+					<span style="font-size:15px;"
+						t-foreach="o.itineraire_mission_ids" t-as="i">
+						<span style="text-align:left;" t-field="i.loc_id.name" />
+						-
+					</span>
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Pour : </div>
+					<span t-field="o.motif_mission_id.name" />
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Objet : </div>
+					<span t-field="o.object" />
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Proposition date de départ :
+					</div>
+					<span t-field="o.date_from" />
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Proposition date de retour :
+					</div>
+					<span t-field="o.date_to" />
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Proposition de durée :
+					</div>
+					<span t-field="o.duree_mission" />
+					jour(s)
+
+					<br></br>
+					<div style="font-weight : 600;float:left ;gras;">Financement :
+					</div>
+					<span t-field="o.project_id" />
+					<br></br>
+					<table
+						class="table table-bordered table-sm text-center border border-dark"
+						border="1" style="border-collapse: collapse;width: 100%;">
+						<div style="font-weight : 600;float:left ;gras;">Proposition de la composition de l'equipe de la mission :
+						</div>
+						<tr style="border:1px soild #000">
+							<th style="border:1px soild #000">Nom Prénom - Matricule</th>
+							<th style="border:1px soild #000">Rôle</th>
+						</tr>
+						<div t-foreach="o.participant_ids" t-as="l">
+							<tr style="border:1px soild #000">
+								<td style="border:1px soild #000">
+									<span t-field="l.participant_id" />
+									-
+									<span t-field="l.participant_id.matricule" />
+								</td>
+								<td style="border:1px soild #000">
+									<span t-field="l.role_mission_id" />
+								</td>
+							</tr>
+						</div>
+					</table>
+					<br></br>
+					<div class="row justify-content-between"
+						t-if="o.company_id.show_signature">
+						<div class="col-6 text-left">
+							<span t-field="o.signataire1_id.signature" />
+						</div>
+						<div class="col-6 text-right">
+							<span t-field="o.signataire2_id.signature" />
+						</div>
+					</div>
+				</div>
+			</t>
+			<div class="footer" style="position:absolute; margin:0px; padding:0px">
+						<span class="page"/>/<span class="topage"/>
+			</div>
+		</template>
+
+		<template id="report_mission_order">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_mission_order_document" t-lang="lang" />
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

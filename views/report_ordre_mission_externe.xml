@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_mission_exterieur_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page" style="page-break-after:always;page-break-inside: avoid;"
+					t-foreach="o.participant_ids" t-as="p">
+					<h5 style="text-align:center;">
+						<div class="row justify-content-between">
+							<div class="col-4"
+								style="float:left;font-size:15px; font-weight:bold">
+								<div t-foreach="o.department_id" t-as="e">
+									<span t-field="e.timbre" />
+								</div>
+							</div>
+							<div class="col-4 mb4">
+			                    <img t-if="o.establishment_id.logo" t-att-src="image_data_uri(o.establishment_id.logo)" style="width:50%;" alt="Logo"/>
+			                </div>
+							<div class="col-4 text-right"
+								style="float:right; padding:2px;">
+								<div style="padding:5px;text-align:center;">
+									<div style="font-size:15px; font-weight:bold;">BURKINA FASO</div>
+									<div style="font-size:15px;">**********</div>
+									<div style="font-size:15px;">Unité-Progrés-Justice</div>
+								</div>
+							</div>
+						</div>
+						<div style="clear:both;"></div>
+						<br></br>
+						<div style="text-align:center;font-weight:bold;">
+							<u>Ordre de mission N° 							
+							<span t-field="o.name" /></u>
+						</div>
+					</h5>
+					<br></br>
+					<div style="text-align:left;">
+						<b>Imputation: </b>
+						<i>
+						Section: 
+							<span t-field="o.budget_line_id.sectionbudgetaire_id.code_section" /> -
+						Programme: 
+							<span t-field="o.budget_line_id.programmechapitre_id.code_programmechapitre" /> -
+						Action: 
+							<span t-field="o.budget_line_id.actionarticle_id.code_actionarticle" /> -
+						Activité: 
+							<span t-field="o.budget_line_id.activiteparagraphe_id.code_activiteparagraphe" /> -
+						Paragraphe: 
+							<span t-field="o.budget_line_id.paragrapherubrique_id.code_paragrapherubrique" />
+						</i>
+					</div>
+					<div style="clear:both;"></div>
+					<br></br>
+					<div style="text-align:left;">
+						<span style="font-size:18px;padding:5px">
+							Je sousigné, 
+							
+							<span t-field="o.establishment_id.ordonnateur_id.civilite"/>
+							<span t-field="o.establishment_id.ordonnateur_id"/>, 
+							
+							<span t-field="o.establishment_id.ordonnateur_id.job_id"/>
+							ordonne la mission qui suit :
+						</span>
+					</div>
+					<br></br>
+					<table class="table table-bordered table-sm text-center border border-dark" border="1" style="border-collapse: collapse;width: 100%;">
+						<tr>
+							<td style= "text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;">Caractéristiques de la mission</span>
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Objet : </span>
+							</td>
+							<td style= "text-align:left;" colspan="3">
+								<span style="font-size:18px" t-field="o.object" />
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Véhicule n° : </span>
+							</td>
+							<td style= "text-align:left;">
+								<span t-foreach="o.vehicule_mission_ids" t-as="v">
+									<span style="font-size:18px" t-if="p.id in v.passager_ids.ids" t-field="v.vehicule_id.name" /></span>
+							</td>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Motif : </span>
+							</td>
+							<td style= "text-align:left;">
+								<span style="font-size:18px" t-field="o.motif_mission_id.name" />
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Date de départ : </span>
+							</td>
+							<td style= "text-align:left;">
+								<span style="font-size:18px" t-field="o.date_from" />
+							</td>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Date de retour : </span>
+							</td>
+							<td style= "text-align:left;">
+								<span style="font-size:18px" t-field="o.date_to" />
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;">
+								<span style="font-weight : 600;float:left ;gras;">Programme d'activité : </span>
+							</td>
+							<td style= "text-align:left;" colspan="3">
+								<span style="font-size:18px" t-field="o.project_id.name" />
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;">Participant</span>
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:center;" colspan="2">
+								<span style="font-weight : 600;float:left ;gras;">Nom Prénom</span>
+							</td>
+							<td style= "text-align:center;">
+								<span style="font-weight : 600;float:center ;gras;">Matricule</span>
+							</td>
+							<td style= "text-align:center;">
+								<span style="font-weight : 600;float:center ;gras;">Rôle</span>
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;" colspan="2">
+								<span style="font-size:18px" t-field="p.participant_id.name" />
+							</td>
+							<td style= "text-align:center;">
+								<span style="font-size:18px" t-field="p.participant_id.matricule" />
+							</td>
+							<td style= "text-align:center;">
+								<span style="font-size:18px" t-field="p.role_mission_id.name" />
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;">Itinéraire</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align:left;" t-if="o.itineraire_mission_ids" colspan="4" >
+								<span style="font-size:15px;" t-foreach="o.itineraire_mission_ids" t-as="i" >
+									<span style= "text-align:left;" t-field="i.loc_id.name" /> -
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:center;" colspan="4">
+								<span style="font-weight : 600;float:center ;gras;">Communication Orale en Conseil des Ministres</span>
+							</td>
+						</tr>
+						<tr>
+							<td style= "text-align:left;font-size:15px">
+								Numéro: 
+								<span style="font-size:16px" t-field="o.cocm_id" />
+							</td>
+							<td style= "text-align:center;font-size:16px">
+								Du: 
+								<span style="font-size:16px" t-field="o.cocm_id.date_creation" />
+							</td>
+							<td style= "text-align:center;font-size:16px" colspan="2">
+								Autorisée en Conseil des Ministres le: 
+								<span style="font-size:16px" t-field="o.cocm_id.date_autorisation" />
+							</td>
+						</tr>
+					</table>
+					<br></br>
+					<div style="clear:both;"></div>
+					<br></br>
+					<div class="row justify-content-between" t-if="o.company_id.show_signature" >
+						<div class="col-6 text-left">
+							<span t-field="o.signataire1_id.signature"/>
+						</div>
+						<div class="col-6 text-right">
+							<span t-field="o.signataire2_id.signature"/>
+						</div>
+					</div>
+				</div>
+				<div class="footer" style="position:absolute; margin:0px; padding:0px">
+						<span class="page"/>/<span class="topage"/>
+			</div>
+			</t>
+		</template>
+		<template id="report_mission_exterieur">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_mission_exterieur_document" t-lang="lang" /></t>
+			</t>
+		</template>
+	</data>
+</odoo>

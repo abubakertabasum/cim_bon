@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_rechercher_om_wizard" model="ir.ui.view">
+		<field name="name">rechercher.om.wizard.form</field>
+		<field name="model">rechercher.om.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<span class="o_form_label text-muted">Veuillez saisir un numéro de mission</span>
+				<group>
+					<group>
+						<field name="name" />
+					</group>
+				</group>
+				
+				<footer>
+					<button name="action_search" string="Confirmer"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+	
+	<record id="action_rechercher_om_wizard"
+		model="ir.actions.act_window">
+		<field name="name">Rechercher OM</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">rechercher.om.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_rechercher_om_wizard" />
+		<field name="target">new</field>
+	</record>
+
+</odoo>
+        

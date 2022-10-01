@@ -1,0 +1,1226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		
+		<!-- Top menu item -->
+		<menuitem name="CIM" web_icon="cim,static/description/icon.png"
+			id="menu_cim" />
+		
+		<!-- Menu Configuration -->
+		<menuitem name="Paramètres" id="menu_cim_configuration"
+			parent="menu_cim" groups="cim.group_controleur_local,cim.group_regisseur" sequence="1"/>
+			
+		<menuitem name="Paramètres central" id="menu_cim_admin_central"
+			parent="menu_cim" groups="cim.group_controleur_central" sequence="10" />
+			
+		<menuitem name="Paramètres local" id="menu_cim_admin_fonctionnel"
+			parent="menu_cim" groups="cim.group_controleur_local,cim.group_regisseur" sequence="20" />
+	
+		<!-- Mission view filter -->
+		<record id="view_cim_mission_filter" model="ir.ui.view">
+            <field name="name">cim.mission.filter</field>
+            <field name="model">cim.mission</field>
+            <field name="arch" type="xml">
+                <search string="Mission">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <separator />
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <separator />
+                    <filter domain="[('state', '=', 'new')]" string="Nouvelles missions" name="new"/>
+                    <filter domain="[('state', '=', 'initiation')]" string="Missions initiées" name="initiation"/>
+                    <filter domain="[('state', '=', 'approbation')]" string="Missions approuvées" name="approbation"/>
+                    <filter domain="[('state', '=', 'budgeting')]" string="Missions budgétisées" name="budgeting"/>
+                    <filter domain="[('state', '=', 'validate_sg')]" string="Missions validées" name="validate_sg"/>
+                    <filter domain="[('state', '=', 'daf_payment')]" string="Missions payées" name="daf_payment"/>
+                    <filter domain="[('state', '=', 'checked')]" string="Missions vérifiées" name="checked"/>
+                    <filter domain="[('state', '=', 'done')]" string="Missions clôturées" name="done"/>
+                    <filter domain="[('state', '=', 'canceled')]" string="Missions annulées" name="canceled"/>
+                    <separator/>
+                    <filter string="Les missions de ma direction" name="direction" domain="[('department_id.member_ids.user_id', '=', uid)]" help="Les missions de ma direction"/>
+                    <separator/>
+                    <filter string="Activités en retard" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Afficher tous les enregistrements dont la prochaine date d'action est antérieure à aujourd'hui"/>
+                	<filter string="Activités du jour" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                	<filter string="Activités futures" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Programme d'activités" name="project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Structure" name="structure" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by': 'mission_type_id'}"/>
+                        <filter string="Motif" name="motif" domain="[]" context="{'group_by': 'motif_mission_id'}"/>
+                        <filter string="Statut" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+		
+		<!-- Mission view tree -->
+		<record model="ir.ui.view" id="cim_mission_tree">
+			<field name="name">cim.mission.tree</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="num_demande" />
+					<field name="num_mission" />
+					<field name="mission_type_id"/>
+					<field name="establishment_id"/>
+					<field name="project_id"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+					<field name="motif_mission_id"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Mission view pivot -->
+		<record id="cim_mission_view_pivot" model="ir.ui.view">
+            <field name="name">cim.mission.pivot</field>
+            <field name="model">cim.mission</field>
+            <field name="arch" type="xml">
+                <pivot string="Analyse de Mission">
+                    <field name="project_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                </pivot>
+            </field>
+        </record>
+        
+		<!-- Mission view calendar -->
+		<record id="cim_mission_view_calendar" model="ir.ui.view">
+        <field name="name">cim.mission.view.calendar</field>
+        <field name="model">cim.mission</field>
+        <field name="arch" type="xml">
+            <calendar string="Mission" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="project_id">
+                <field name="name"/>
+            </calendar>
+        </field>
+    	</record>
+		
+		<!-- action frais de mission -->
+    	<record model="ir.actions.act_window" id="action_view_mission_frais">
+			<field name="name">Frais de mission</field>
+			<field name="res_model">cim.expense</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('mission_id', '=', active_id),('display_type', '=', False)]</field>
+		</record>
+		
+		<!-- action paiements de frais mission -->
+    	<record model="ir.actions.act_window" id="action_view_mission_paiements">
+			<field name="name">Paiements</field>
+			<field name="res_model">cim.paiement.participant</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('mission_id', '=', active_id)]</field>
+			<field name="context">{'search_default_participant': 1}</field>
+		</record>
+		
+		<!-- action carburant mission -->
+    	<record model="ir.actions.act_window" id="action_view_carburant_mission">
+			<field name="name">Carburants</field>
+			<field name="res_model">cim.mission.vehicule</field>
+			<field name="view_mode">tree</field>
+			<field name="domain">[('mission_id', '=', active_id)]</field>
+		</record>
+		
+		<!-- action evaluations mission -->
+    	<record model="ir.actions.act_window" id="action_view_mission_evaluation">
+			<field name="name">Evaluations</field>
+			<field name="res_model">cim.mission.evaluation</field>
+			<field name="view_mode">tree</field>
+			<field name="domain">[('mission_id', '=', active_id)]</field>
+		</record>
+		
+		<!-- Mission Rejet view tree -->
+		<record model="ir.ui.view" id="cim_mission_rejet_tree">
+			<field name="name">cim.mission.rejet.tree</field>
+			<field name="model">cim.mission.rejet</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="mission_id" />
+					<field name="motif_rejet_id" />
+					<field name="auteur_rejet_id" />
+					<field name="date_rejet" />
+					<field name="state_rejet_debut" />
+					<field name="state_rejet_fin" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Mission Rejet view form -->
+		<record model="ir.ui.view" id="cim_mission_rejet_form">
+			<field name="name">cim.mission.rejet.form</field>
+			<field name="model">cim.mission.rejet</field>
+			<field name="arch" type="xml">
+				<form string="Rejet des missions">
+					<sheet>
+						<group>
+							<group>
+								<field name="mission_id" />
+								<field name="motif_rejet_id" />
+								<field name="auteur_rejet_id" />
+								<field name="date_rejet" />
+							</group>
+							<group>
+								<field name="state_rejet_debut" />
+								<field name="state_rejet_fin" />
+							</group>
+						</group>
+						<group>
+							<field name="description_rejet" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- action rejet mission -->
+    	<record model="ir.actions.act_window" id="action_view_rejet_mission">
+			<field name="name">Rejets</field>
+			<field name="res_model">cim.mission.rejet</field>
+			<field name="view_mode">tree</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('cim_mission_rejet_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('cim_mission_rejet_form')})]"
+			/>
+			<field name="domain">[('mission_id', '=', active_id)]</field>
+		</record>
+		
+		<record model="ir.ui.view" id="cim_mission_form">
+			<field name="name">cim.mission.form</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<form string="Mission">
+					<header>
+							
+						<button name="act_launch_mission" string="Initier"
+							type="object" states="new"
+							groups="cim.group_initiateur"
+							class="oe_highlight"
+							confirm="Vous désirez initier la demande d'autorisation de mission?"/>
+						
+ 						<button name="act_confirm_mission" string="Approuver"
+							type="object" states="initiation" 
+							groups="cim.group_approbateur"
+							class="oe_highlight"
+							confirm="Vous désirez approuver la demande d'autorisation de mission?"/>
+						
+						<button name="%(action_signataire_rapport_wizard)d" string="Générer DAM"
+							type="action" states="new,initiation" context="{'default_type_rapport':'dam'}"
+							class="oe_highlight" help="Générer une demande d'autorisation de mission"/>
+							
+						<button name="%(action_signataire_rapport_wizard)d" string="Ordre de mission"
+							type="action" states="validate_sg,daf_payment" context="{'default_type_rapport':'om'}"
+							class="oe_highlight" help="Générer un ordre de mission"/>
+						
+						<button name="act_check_budget" string="Budgétiser"
+							type="object" states="approbation" 
+							groups="cim.group_regisseur"
+							class="oe_highlight"
+							confirm="Vous désirez valider le calcul des indemnités de la demande d'autorisation de mission?"/>
+							
+						<button name="act_validate_mission" string="Valider"
+							type="object" states="budgeting"
+							groups="cim.group_ordonnateur,cim.group_ordonnateur_externe"
+							class="oe_highlight"
+							confirm="Vous désirez valider la demande d'autorisation pour ordonner la mission?"/>
+
+						<button name="act_pay_expense_mission" string="Liquider"
+							type="object" attrs="{'invisible': ['|',('is_paid', '!=', False),('state', '!=', 'validate_sg')]}"
+							groups="cim.group_regisseur"
+							class="oe_highlight"
+							confirm="Vous désirez liquider le paiement des indemnités de mission?"/>
+						
+						<button name="act_check_mission" string="Vérifier"
+							type="object" states="daf_payment" 
+							groups="cim.group_regisseur"
+							class="oe_highlight"
+							confirm="Vous désirez confirmer la phase de vérification des pièces justificatives de la mission?"/>
+						
+						<button name="act_close_mission" string="Clôturer"
+							type="object" states="checked"
+							groups="cim.group_approbateur"
+							class="oe_highlight"
+							confirm="Vous désirez clôturer la mission?"/>
+							
+						<button name="act_cancel_mission" string="Abandonner"
+							type="object" states="new" groups="cim.group_initiateur" 
+							confirm="Vous désirez abandonner le projet de la demande d'autorisation de mission?"/>
+						
+						<button name="%(action_signataire_rapport_wizard)d" string="Etats d'émargement"
+							type="action" states="validate_sg" context="{'default_type_rapport':'epcf'}" 
+							help="Générer l'état d'émargement des frais de mission"
+							class="oe_highlight"/>
+							
+						<button name="%(action_signataire_rapport_wizard)d" string="Etat des frais de carburant"
+							type="action" attrs="{'invisible': ['|',('state', 'not in', ['validate_sg']),('mission_type_id', '=', %(cim.data_mission_type_external)d)]}" context="{'default_type_rapport':'epfc'}" 
+							help="Générer état de paiement des frais de carburant"
+							class="oe_highlight"/>
+						
+						<button name="act_generate_mission_synthese" string="Générer Compte Rendu"
+							type="object" states="checked" help="Générer rapport synthétique de la mission"
+							class="oe_highlight"/>
+						
+						<button help="Rejeter le projet de mission" string="Rejeter"
+							name="%(action_rejeter_mission_wizard)d"
+							type="action" context="{'default_type': 'mission'}" attrs="{'invisible': [('state', 'in', ['new','checked','done','canceled'])]}"/>
+							
+						<field name="state" widget="statusbar"
+							statusbar_visible="new,initiation,approbation,budgeting,validate_sg,daf_payment,checked,done"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button type="action" class="oe_stat_button" icon="fa-reply" name="%(action_view_rejet_mission)d" attrs="{'invisible': [('nbr_rejet', '=', 0)]}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="nbr_rejet"/>
+		                            </span>
+		                            <span class="o_stat_text">Rejets</span>
+		                        </div>
+		                    </button>
+		                    <button type="action" class="oe_stat_button" icon="fa-tachometer" name="%(action_view_carburant_mission)d" attrs="{'invisible': [('total_carb_mission', '=', 0.0)]}" groups="cim.group_regisseur" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="total_carb_mission" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Frais de carburants</span>
+		                        </div>
+		                    </button>
+		                    <button type="action" class="oe_stat_button" icon="fa-pencil-square-o" name="%(action_view_mission_frais)d" attrs="{'invisible': [('total_only_frais_mission', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="total_only_frais_mission" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Indemnités de mission</span>
+		                        </div>
+		                    </button>
+		                    <button type="action" class="oe_stat_button" icon="fa-pencil-square-o" name="%(action_view_mission_frais)d" attrs="{'invisible': [('frais_mission_total', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="frais_mission_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Dépenses totale</span>
+		                        </div>
+		                    </button>
+		                    <button type="action" class="oe_stat_button" icon="fa-money" name="%(action_view_mission_paiements)d" attrs="{'invisible': [('montant_total_paye', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="montant_total_paye" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		                            </span>
+		                            <span class="o_stat_text">Total des paiements</span>
+		                        </div>
+		                    </button>
+		                    <button type="action" class="oe_stat_button" name="%(action_view_mission_evaluation)d" attrs="{'invisible': [('taux_moyen', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="taux_moyen" widget="percentpie" string="Taux" help="Taux moyen de l'évaluation"/>
+		                            </span>
+		                        </div>
+		                    </button>
+		                    <button name="toggle_active" type="object" class="oe_stat_button"
+								icon="fa-archive" states="done">
+								<field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+							</button>
+						</div>
+						<field name="is_paid" invisible="1" />
+						<field name="cocm" invisible="1" />
+						<div class="badge badge-pill badge-success pull-right" attrs="{'invisible': [('is_paid', '=', False)]}">Payé</div>
+						<div class="oe_title">
+							<h1 position="before">
+								<label for="name" attrs="{'invisible': [('state', '!=', 'new')]}" />
+								<label for="num_demande" attrs="{'invisible': [('state', 'not in', ['initiation','approbation','budgeting'])]}" />
+								<label for="num_mission" attrs="{'invisible': [('state', 'not in', ['validate_sg','daf_payment','checked','done'])]}" />
+								<h2>
+									<field name="name" />
+								</h2>
+							</h1>
+						</div>
+						<group>
+							<group attrs="{'readonly': [('state', 'in', ['checked','done','canceled'])]}">
+								<field name="mission_type_id" required="1" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								<field name="cocm_id" attrs="{'invisible': ['|',('mission_type_id', '!=', %(cim.data_mission_type_external)d),('cocm', '=', False)]}"/>
+								<field name="object" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								
+							</group>
+							<group attrs="{'readonly': [('state', 'in', ['checked','done','canceled'])]}">
+								<field name="motif_mission_id" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								<field name="description"  attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								<field name="currency_id" options="{'no_create': True, 'no_open': True}" invisible="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page name="info" string="Information générale" attrs="{'readonly': [('state', 'in', ['checked','done','canceled'])]}">
+								<group>
+									<group string="Informations">
+										<field name="with_financial_impact" string="Avec incid. fin." attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+										<field name="exercice_id" readonly="1" />
+										<field name="budget_line_id" invisible="1"/>
+										<field name="bailleur_id"  attrs="{'required': [('mission_type_id', '=', %(cim.data_mission_type_external)d),('with_financial_impact', '=', False)],'invisible': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="department_id" string="Svce. demandeur" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="establishment_id" invisible="1"/>	
+										<field name="type_ordre_mission_id" string="Type ordre mission" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>										
+									</group>
+									<group string="Période">
+										<field name="date_from" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="date_to" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="duree_mission"/>
+									</group>
+									<group>
+										<field name="company_id" invisible="1"/>
+										<field name="employee_id" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+									</group>
+								</group>
+								
+								<group string="Budget">
+									<field name="project_id" string="Prog. activité" options="{'no_create': True, 'no_open': True}"  attrs="{'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									<field name="sectionbudgetaire_id" string="Section" options="{'no_create': True, 'no_open': True}"  attrs="{'required': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									<field name="programmechapitre_id" string="Prog/Chapitre" options="{'no_create': True, 'no_open': True}"  attrs="{'required': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									<field name="actionarticle_id" string="Action/Article" options="{'no_create': True, 'no_open': True}"  attrs="{'required': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									<field name="activiteparagraphe_id" string="Activité/Parag" options="{'no_create': True, 'no_open': True}"  attrs="{'required': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									<field name="paragrapherubrique_id" string="Parag/Rubrique" options="{'no_create': True, 'no_open': True}"  attrs="{'required': [('with_financial_impact', '!=', False)],'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+									
+									<field name="credit_dispo" string="Crédits diponibles" attrs="{'invisible': [('state', 'in', ['checked','done'])]}"/>
+										
+								</group>
+								
+                                <group string="Objectifs à atteindre" >
+                                    <field name="objectif_missions" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="mission_id" invisible="1" />
+                                            <field name="objectif_mission" />
+                                            <field name="objectif_atteint" style="width:20%%" />
+                                            <field name="objectif_observations" />                                            
+                                        </tree>
+                                    </field>
+                                </group>
+                                	<field name="sondage_objectif" string="Sondage" />
+								<group string="Itinéraires">
+									<field name="itineraire_mission_ids" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" nolabel="1">
+										<tree editable="bottom">
+											<field name="loc_id" required="1"/>
+											<field name="depart"/>
+											<field name="fin"/>
+											<field name="date_arrivee" invisible="1"/>
+											<field name="duree" sum="Durée" attrs="{'readonly': [('depart', '!=', False)]}"/>
+											<field name="description"/>
+										</tree>
+									</field>
+									<field name="distance_mission"/>
+								</group>
+								<group string="Participants" >
+									<field name="participant_ids" nolabel="1" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" options="{'no_create': True, 'no_open': True}">
+	 									<tree editable="bottom">
+	 										<field name="participant_id" domain="[('company_id',company_id )]" class="oe_inline" tring="Nom - Prénom" options="{'no_create': True, 'no_open': True}" attrs="{'required' : [('state','=','new')]}"/>
+	 										<field name="matricule" />
+	 										<field name="work_phone" invisible="1" />
+		 									<field name="company_id" />
+		 									<field name="department_id" />
+		 									<field name="role_mission_id" />
+		 									<field name="est_pec" string="PEC"/>
+		 									<field name="num_om" invisible="1" />
+		 									<field name="currency_id"  invisible="1" />
+		 									<field name="mission_id" invisible="1" />
+		 									<field name="state_mission" invisible="1" />
+		 									<field name="trop_percu" invisible="1" />
+		 									<field name="reste_a_paye" invisible="1" />
+		 									<field name="is_paid" invisible="1" />
+		 									<field name="is_refunded" invisible="1" />
+		 									<field name="state" />
+                                            <button name="%(cim.action_paiement_participant_wizard)d" type="action" string="Payer" help="Payer les frais" 
+		 									attrs="{'invisible': ['|','|',('state', '!=', 'new'),('state_mission', '!=', 'validate_sg'),('est_pec','=',False)]}"
+		 									context="{'default_type': 'frais'}" groups="cim.group_regisseur" />
+		 									<button name="%(cim.action_verification_participant_wizard)d" type="action" string="Contrôler" help="Contrôle des pièces"
+		 									attrs="{'invisible': ['|',('state', '=', 'checked'),('state_mission', '!=', 'daf_payment')]}" groups="cim.group_regisseur"/>
+		 									<button name="%(cim.action_paiement_participant_wizard)d" type="action" string="Payer" help="Payer le reste à payer" 
+		 									attrs="{'invisible': ['|','|','|',('state', '!=', 'checked'),('state_mission', '!=', 'daf_payment'),('reste_a_paye', '=', 0),('is_paid', '!=', False)]}" 
+		 									context="{'default_type': 'frais'}" groups="cim.group_regisseur"/>
+		 									<button name="%(cim.action_paiement_participant_wizard)d" type="action" string="Rembourser" help="Rembourser un trop perçu" 
+		 									attrs="{'invisible': ['|','|','|',('state', '!=', 'checked'),('state_mission', '!=', 'daf_payment'),('trop_percu', '=', 0),('is_refunded', '!=', False)]}" 
+		 									context="{'default_type': 'remboursement'}" groups="cim.group_regisseur"/>
+		 									<button name="delete_participant" type="object" string="Retirer" help="Retirer un participant"
+		 									attrs="{'invisible': ['|',('state', '!=', 'new'),('state_mission', '!=', 'validate_sg')]}" groups="cim.group_regisseur" />
+	 									</tree>
+ 									</field>
+								</group>
+							</page>
+ 							<page name="logistique" string="Logistique" attrs="{'invisible': [('mission_type_id', '=', %(cim.data_mission_type_external)d)]}">
+								<field name="vehicule_mission_ids" context="{'participant_mission_ids': participant_ids}" attrs="{'readonly': [('state', 'not in', ['new','initiation','approbation'])]}" >
+									<tree editable="bottom">
+										<field name= "vehicule_id"/>
+										<field name="type_carrosserie_id"/>
+										<field name="company_vehicule_id" readonly="1"/>
+										<field name= "passager_ids" widget='many2many_tags' domain="[('id', 'in', context.get('participant_mission_ids'))]" options="{'no_create': True, 'no_open': True}"/>
+										<field name="driver_ids" widget='many2many_tags' domain="[('id', 'in', context.get('participant_mission_ids')),('role_mission_id.code', '=', 'D')]" options="{'no_create': True, 'no_open': True}"/>
+										<field name="montant_carb" invisible="1"/>
+										<field name="montant_carb_interne" invisible="1"/>
+										<field name="montant_carb_mission" options="{'currency_field': 'currency_id'}" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+							<page name="pj" string="Pièce(s) justificative(s)" widget="one2many_list" attrs="{'readonly': [('state', 'not in', ['new','initiation','approbation'])]}">
+								<field name="attachment_ids" widget="one2many_list">
+									<tree editable="bottom">
+										<field name="nature_pj_id" required="1"/>
+										<field name="type" invisible="1"/>
+										<field name="name" invisible="1"/>
+										<field name="datas"/>
+									</tree>
+								</field>
+							</page>
+							<page name="frais" string="Frais de Mission" attrs="{'invisible': ['|',('with_financial_impact', '=', False),('state', 'in', ['new','initiation','canceled'])]}" >
+								<field 
+									name="frais_ids" 
+									widget="section_and_note_one2many"
+									context="{'employee_ids': participant_ids}"
+									>
+									<tree editable="bottom" decoration-info="(not display_type)" >
+									
+										<control>
+	                                        <create string="Ajouter une ligne"/>
+	                                        <create string="Ajouter une section" context="{'default_display_type': 'line_section'}"/>
+	                                        <create string="Ajouter une note" context="{'default_display_type': 'line_note'}"/>
+	                                    </control>
+										<field name="sequence" widget="handle"/>
+										<field name="date" invisible="1"/>
+										<field name="employee_id" string="Participant" attrs="{'required': [('display_type', '=', False)]}" domain="[('id', 'in', context.get('employee_ids'))]" />
+										<field name="product_id" string="Elément de dépense" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="localite_id" string="Localité" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="name" widget="section_and_note_text" />
+										<field name="product_uom_id" invisible="1"/>
+										<field name="quantity" string="Quantité" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="tax_ids" invisible="1"/>
+										<field name="unit_amount" string="Montant unitaire" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="total_amount" string="Montant total"/>
+										<field name="untaxed_amount" invisible="1"/>
+										<field name="analytic_account_id" invisible="1"/>
+										<field name="account_id" invisible="1"/>
+										<field name="total_amount_company" invisible="1"/>
+										<field name="company_id" invisible="1"/>
+										<field name="sheet_id" invisible="1"/>
+										<field name="display_type" invisible="1"/>
+										<field name="mission_id" invisible="1" attrs="{'required': [('display_type', '=', False)]}"/>
+										<field name="state" invisible="1" string="Statut"/>
+									</tree>
+									<form string="Expenses" class="o_expense_form">
+					                    <div class="oe_title">
+					                        <label for="name"/>
+					                        <h1>
+					                            <field name="name" placeholder="e.g. Déjeuner avec un Client"/>
+					                        </h1>
+					                    </div>
+					                    <group>
+					                        <group>
+					                            <field name="product_id" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
+					                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+					                            <label for="quantity"/>
+					                            <div>
+					                                <field name="quantity" class="oe_inline"/>
+					                                <field name="product_uom_id" widget="selection" class="oe_inline" groups="uom.group_uom"/>
+					                            </div>
+					                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" invisible="1"/>
+					                        </group><group>
+					                            <field name="reference" invisible="1"/>
+					                            <field name="date"/>
+					                            <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user" invisible="1"/>
+					                            <field name="employee_id" groups="hr_expense.group_hr_expense_user" options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', context.get('employee_ids'))]"/>
+					                            <field name="sheet_id" invisible="1"/>
+					                            <field name="currency_id" groups="base.group_multi_currency"/>
+					                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting" invisible="1"/>
+					                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" invisible="1"/>
+					                            <field name="company_id" string="Structure" groups="base.group_multi_company"/>
+					                        </group><group>
+					                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+					                            <label for="payment_mode" invisible="1"/>
+					                            <div>
+					                                <field name="payment_mode" widget="radio" invisible="1"/>
+					                            </div>
+					                        </group>
+					
+					                    </group>
+					                    <div>
+					                        <field name="description" class="oe_inline" placeholder="Notes..."/>
+					                    </div>
+					                </form>
+								</field>
+								<field name="total_lettre" />
+							</page>
+							<page name="other_frais" string="Autres frais" attrs="{'invisible': ['|',('with_financial_impact', '=', False),('state', 'in', ['new','initiation','daf_payment','checked','done','canceled'])]}" >
+								<field 
+									name="other_frais_ids" 
+									widget="section_and_note_one2many"
+									context="{'employee_ids': participant_ids, 'default_other': True}" 
+								>
+									<tree editable="bottom" decoration-info="(not display_type)" >
+									
+										<control>
+	                                        <create string="Ajouter une ligne"/>
+	                                        <create string="Ajouter une section" context="{'default_display_type': 'line_section'}"/>
+	                                        <create string="Ajouter une note" context="{'default_display_type': 'line_note'}"/>
+	                                    </control>
+                                    
+										<field name="sequence" widget="handle" />
+										<field name="date" invisible="1"/>
+										<field name="employee_id" string="Participant" attrs="{'required': [('display_type', '=', False)]}"  />
+										<field name="product_id" string="Article" 
+										attrs="{'required': [('display_type', '=', False)]}" domain="[('is_product', '=', True)]" 
+										context="{'default_can_be_expensed': 1, 'default_type': 'service', 'default_is_product': 1}" />
+										<field name="name" widget="section_and_note_text"/>
+										<field name="product_uom_id" invisible="1"/>
+										<field name="quantity" string="Quantité" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="tax_ids" invisible="1"/>
+										<field name="unit_amount" string="Montant unitaire" attrs="{'required': [('display_type', '=', False)]}" />
+										<field name="total_amount" string="Montant total" />
+										<field name="untaxed_amount" invisible="1"/>
+										<field name="analytic_account_id" invisible="1"/>
+										<field name="account_id" invisible="1"/>
+										<field name="total_amount_company" invisible="1"/>
+										<field name="company_id" invisible="1"/>
+										<field name="sheet_id" invisible="1"/>
+										<field name="display_type" invisible="1"/>
+										<field name="mission_id" invisible="1" attrs="{'required': [('display_type', '=', False)]}"/>
+										<field name="other" invisible="1"/>
+										<field name="state" invisible="1" string="Statut"/>
+										<button name="action_get_attachment_view" string="Voir les documents joints" type="object" icon="fa-paperclip" />
+									</tree>
+									<form string="Expenses" class="o_expense_form">
+					                    <div class="oe_title">
+					                        <label for="name"/>
+					                        <h1>
+					                            <field name="name" placeholder="e.g. Déjeuner avec un Client"/>
+					                        </h1>
+					                    </div>
+					                    <group>
+					                        <group>
+					                            <field name="product_id" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
+					                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+					                            <label for="quantity"/>
+					                            <div>
+					                                <field name="quantity" class="oe_inline"/>
+					                                <field name="product_uom_id" widget="selection" class="oe_inline" groups="uom.group_uom"/>
+					                            </div>
+					                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" />
+					                        </group><group>
+					                            <field name="reference" invisible="1"/>
+					                            <field name="date"/>
+					                            <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user" invisible="1"/>
+					                            <field name="employee_id" groups="hr_expense.group_hr_expense_user" options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', context.get('employee_ids'))]"/>
+					                            <field name="sheet_id" invisible="1"/>
+					                            <field name="currency_id" groups="base.group_multi_currency"/>
+					                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting" invisible="1"/>
+					                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" invisible="1"/>
+					                            <field name="company_id" string="Structure" groups="base.group_multi_company"/>
+					                        </group><group>
+					                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+					                            <label for="payment_mode" invisible="1"/>
+					                            <div>
+					                                <field name="payment_mode" widget="radio" invisible="1"/>
+					                            </div>
+					                        </group>
+					
+					                    </group>
+					                    <div>
+					                        <field name="description" class="oe_inline" placeholder="Notes..."/>
+					                    </div>
+					                </form>
+								</field>
+							</page>
+							<page name="rs" string="Rapport synthétique de la mission" attrs="{'invisible': [('state', 'not in', ['daf_payment','checked','done'])]}">
+								<group >
+									<group string="Résumé et Enseignements">
+										<field name="rs_resume" string="Résumé succint"  readonly="1"/>
+										<field name="rs_enseignements" string="Enseignements" readonly="1" />																		
+									</group>
+									<group string="Limites et Suggestions">
+										<field name="rs_limites" string="Limites" readonly="1"/>
+										<field name="rs_suggestions" string="Suggestions" readonly="1"/>
+									</group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+		
+	
+		
+		<!-- Mission participant form view -->
+		<record model="ir.ui.view" id="cim_mission_participant_form">
+			<field name="name">cim.mission.participant.form</field>
+			<field name="model">cim.mission.participant</field>
+			<field name="arch" type="xml">
+				<form string="Participants">
+					<header>
+						<field name="state" widget="statusbar" statusbar_visible="new,paid,checked"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="matricule" />
+								<field name="participant_id" />
+								<field name="work_phone" />
+								<field name="role_mission_id" />
+							</group>
+							<group>
+								<field name="company_id" />
+								<field name="department_id" />
+								<field name="est_pec" />
+							</group>
+						</group>
+						<notebook>
+							<page name="check" string="Vérification" >
+								<group>
+									<field name="itineraire_reel_ids" >
+										<tree>
+											<field name="loc_id"/>
+											<field name="depart"/>
+											<field name="date_arrivee"/>
+											<field name="duree" />
+											<field name="description"/>
+										</tree>
+									</field>
+								</group>
+								<group>
+									<group>
+										<field name="duree_reel" />
+										<field name="frais_reel" />
+										<field name="trop_percu" attrs="{'invisible': [('trop_percu', '=', 0.0)]}" style="color:green;" />
+										<field name="reste_a_paye" attrs="{'invisible': [('reste_a_paye', '=', 0.0)]}" style="color:red;" />
+									</group>
+								</group>
+								<field name="observation" placeholder="Observation"/>
+							</page>
+							<page name="check_pj" string="Pièces justificatives" states="paid,checked">
+								<field name="pj_ids" >
+									<tree create="false" delete="false" editable="false">
+										<field name="nature_pj_id" />
+										<field name="is_exist" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!--critere.evalation tree view -->
+		<record model="ir.ui.view" id="cim_critere_evaluation_tree">
+			<field name="name">cim.critere.evaluation.tree</field>
+			<field name="model">cim.critere.evaluation</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- critere.evaluation form view -->
+		<record model="ir.ui.view" id="cim_critere_evaluation_form">
+			<field name="name">cim.critere.evaluation.form</field>
+			<field name="model">cim.critere.evaluation</field>
+			<field name="arch" type="xml">
+				<form string="Critère d'évaluation">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" placeholder="Le libellé du critère doit être unique"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		
+		<!-- evaluation Mission tree view -->
+		<record model="ir.ui.view" id="cim_mission_evaluation_tree">
+			<field name="name">cim.mission.evaluation.tree</field>
+			<field name="model">cim.mission.evaluation</field>
+			<field name="arch" type="xml">
+				<tree editable='top'>
+					<field name= "mission_id" invisible="1"/>
+					<field name= "critere_id"/>
+					<field name="val_ciblee"/>
+					<field name="val_reelle" />
+					<field name= "taux_evaluation" />
+					<field name="observation"/>
+				</tree>
+			</field>
+		</record>
+				
+		<!-- vehicule Mission tree view -->
+		<record model="ir.ui.view" id="cim_mission_vehicule_tree">
+			<field name="name">cim.mission.vehicule.tree</field>
+			<field name="model">cim.mission.vehicule</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name= "vehicule_id"/>
+					<field name="type_carrosserie_id"/>
+					<field name="company_vehicule_id" />
+					<field name= "driver_ids" widget='many2many_tags' />
+					<field name="montant_carb"/>
+					<field name="montant_carb_interne"/>
+					<field name="montant_carb_mission"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Mission type tree view -->
+		<record model="ir.ui.view" id="cim_mission_type_tree">
+			<field name="name">cim.mission.type.tree</field>
+			<field name="model">cim.mission.type</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="nbr_jours_max" />
+					<field name="description" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Mission type form view -->
+		<record model="ir.ui.view" id="cim_mission_type_form">
+			<field name="name">cim.mission.type.form</field>
+			<field name="model">cim.mission.type</field>
+			<field name="arch" type="xml">
+				<form string="Type de la Mission">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" placeholder="Saisir un type unique"/>
+								<field name="nbr_jours_max" />
+								<field name="description" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Actions Mission Type -->
+		<record model="ir.actions.act_window" id="mission_type_act">
+			<field name="name">Types de mission</field>
+			<field name="res_model">cim.mission.type</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Type ordre de mission tree view -->
+		<record model="ir.ui.view" id="cim_type_ordre_mission_tree">
+			<field name="name">cim.type.ordre.mission.tree</field>
+			<field name="model">cim.type.ordre.mission</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" string="Libellé type OM"/>
+					<field name="code" string="Code du type OM"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Type ordre de mission form view -->
+		<record model="ir.ui.view" id="cim_type_ordre_mission_form">
+			<field name="name">cim.type.ordre.mission.form</field>
+			<field name="model">cim.type.ordre.mission</field>
+			<field name="arch" type="xml">
+				<form string="Type d'ordre de mission">
+					<sheet>
+						<group>
+							<group>
+								<field name="code" string="Code du type OM" placeolder="Un caractère unique pour le code"/>
+								<field name="name" string="Libellé type OM" placeholder="Le libellé doit être unique"/>								
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Actions type ordre de mission -->
+		<record model="ir.actions.act_window" id="type_ordre_mission_act">
+			<field name="name">Types d'ordre de mission</field>
+			<field name="res_model">cim.type.ordre.mission</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Motif de mission tree view -->
+		<record model="ir.ui.view" id="cim_motif_mission_tree">
+			<field name="name">cim.motif.mission.tree</field>
+			<field name="model">cim.motif.mission</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="description" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Motif de Mission form view -->
+		<record model="ir.ui.view" id="cim_motif_mission_form">
+			<field name="name">cim.motif.mission.form</field>
+			<field name="model">cim.motif.mission</field>
+			<field name="arch" type="xml">
+				<form string="Motif de Mission">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button"
+									options='{"terminology": "archive"}' />
+							</button>
+						</div>
+						<group>
+							<field name="name" string="Intitulé du motif" placeholder="Saisir un libelé unique" />
+							<field name="description" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Motif de mission Actions -->
+		<record model="ir.actions.act_window" id="motif_mission_act">
+			<field name="name">Motifs de mission</field>
+			<field name="res_model">cim.motif.mission</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Motif de rejet tree view -->
+		<record model="ir.ui.view" id="cim_motif_rejet_tree">
+			<field name="name">cim.motif.rejet.tree</field>
+			<field name="model">cim.motif.rejet</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="description" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Motif de rejet form view -->
+		<record model="ir.ui.view" id="cim_motif_rejet_form">
+			<field name="name">cim.motif.rejet.form</field>
+			<field name="model">cim.motif.rejet</field>
+			<field name="arch" type="xml">
+				<form string="Motif de rejet">
+					<sheet>
+						<group>
+							<field name="name" strng="Intitulé du motif" placeholder="Saisir un intitulé unique" />
+							<field name="description" />
+							<field name="active" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Motif de rejet Actions -->
+		<record model="ir.actions.act_window" id="motif_rejet_act">
+			<field name="name">Motifs de rejet</field>
+			<field name="res_model">cim.motif.rejet</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="new_mission_act">
+			<field name="name">Nouvelles missions</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{'search_default_new': 1}</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face">
+					Créez une nouvelle mission
+				</p>
+				<p>
+					CIM vous aide à gérer facilement vos Missions.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="approbation_mission_act">
+			<field name="name">Missions à approuver</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'initiation')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions à approuver
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="approuve_mission_act">
+			<field name="name">Missions approuvées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'approbation')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions approuvées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="budgeting_mission_act">
+			<field name="name">Missions budgétisées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'budgeting')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions budgétisées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="validate_mission_act">
+			<field name="name">Missions validées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'validate_sg')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions validées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="payment_mission_act">
+			<field name="name">Missions payées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'daf_payment')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions payées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="checked_mission_act">
+			<field name="name">Missions vérifiées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'checked')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions vérifiées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="closed_mission_act">
+			<field name="name">Missions clôturées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,calendar,form,activity</field>
+			<field name="domain">[('state', '=', 'done')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions clôturées
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="canceled_mission_act">
+			<field name="name">Missions annulées</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'canceled')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions annulées
+				</p>
+			</field>
+		</record>
+
+		<!-- Role des participants dans la mission -->
+		<record id="view_cim_role_mission_form" model="ir.ui.view">
+			<field name="name">cim.role.mission.form</field>
+			<field name="model">cim.role.mission</field>
+			<field name="arch" type="xml">
+				<form string="Rôle">
+					<sheet>
+						<group>
+							<group>
+								<field name="code" string="Code du rôle" placeholder="Un caractère unique pour le code"/>
+								<field name="name" string="Libellé du rôle" placeholder="Le libellé doit être unique"/>
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_cim_role_mission_tree" model="ir.ui.view">
+			<field name="name">cim.role.mission.tree</field>
+			<field name="model">cim.role.mission</field>
+			<field name="arch" type="xml">
+				<tree string="Rôle">
+					<field name="code"/>
+					<field name="name" string="Rôle" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions role -->
+		<record model="ir.actions.act_window" id="cim_role_mission_act">
+			<field name="name">Rôles de mission</field>
+			<field name="res_model">cim.role.mission</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Actions critere_evaluation-->
+		<record model="ir.actions.act_window" id="cim_critere_evaluation_act">
+			<field name="name">Critère d'évaluation</field>
+			<field name="res_model">cim.critere.evaluation</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Nature PJ -->
+		<record id="view_cim_nature_pj_form" model="ir.ui.view">
+			<field name="name">cim.nature.pj.form</field>
+			<field name="model">cim.nature.pj</field>
+			<field name="arch" type="xml">
+				<form string="Rôle">
+					<sheet>
+						<group>
+							<group>
+								<field name="code" />
+								<field name="name" />
+								<field name="description" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_cim_nature_pj_tree" model="ir.ui.view">
+			<field name="name">cim.nature.pj.tree</field>
+			<field name="model">cim.nature.pj</field>
+			<field name="arch" type="xml">
+				<tree string="Nature">
+					<field name="code"/>
+					<field name="name" />
+					<field name="description"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Actions nature PJ -->
+		<record model="ir.actions.act_window" id="cim_nature_pj_act">
+			<field name="name">Natures PJ</field>
+			<field name="res_model">cim.nature.pj</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+
+		<!-- Menu Roles -->
+		<menuitem name="Rôles de mission" id="menu_role_mission"
+			parent="menu_cim_admin_central" action="cim_role_mission_act"
+			sequence="200" />
+			
+		<menuitem name="Critère d'évaluation" id="menu_critere_evaluation"
+			parent="menu_cim_admin_central" action="cim_critere_evaluation_act"
+			sequence="210" />
+			
+		<!-- menu Missions -->
+		<menuitem name="Missions" id="menu_cim_mission"
+			parent="menu_cim" sequence="100"/>
+			
+		<!-- Sous menu Missions -->
+		<menuitem name="Workflow des missions" id="menu_cim_mission_workflow"
+			parent="menu_cim_mission" sequence="10" />
+		<menuitem name="Evaluation des missions" id="menu_cim_mission_evaluation"
+			parent="menu_cim_mission" sequence="20" />
+		<menuitem name="Rapports des missions" id="menu_cim_mission_rapport"
+			parent="menu_cim_mission" sequence="30" />
+
+		
+		<menuitem name="Initier une mission" id="menu_initier_mission"
+			parent="menu_cim_mission_workflow" action="new_mission_act" groups="cim.group_initiateur,cim.group_controleur_local" sequence="20" />
+		
+		<menuitem name="Mission à approuver" id="menu_approuver_mission"
+			parent="menu_cim_mission_workflow" action="approbation_mission_act" groups="cim.group_approbateur,cim.group_controleur_local" sequence="30" />
+		
+		<menuitem name="Missions à budgétiser" id="menu_budgetiser_mission"
+			parent="menu_cim_mission_workflow" action="approuve_mission_act" groups="cim.group_regisseur,cim.group_controleur_local" sequence="40" />
+			
+		<menuitem name="Missions à valider" id="menu_valider_mission"
+			parent="menu_cim_mission_workflow" action="budgeting_mission_act" sequence="50" groups="cim.group_ordonnateur,cim.group_ordonnateur_externe,cim.group_controleur_local" />
+		
+		<menuitem name="Missions à payer" id="menu_payer_mission"
+			parent="menu_cim_mission_workflow" action="validate_mission_act" groups="cim.group_regisseur,cim.group_controleur_local" sequence="60" />
+		
+		<menuitem name="Missions à vérifier" id="menu_verifier_mission"
+			parent="menu_cim_mission_workflow" action="payment_mission_act" groups="cim.group_regisseur,cim.group_controleur_local" sequence="70" />
+		
+		<menuitem name="Missions à clôturer" id="menu_cloturer_mission"
+			parent="menu_cim_mission_workflow" action="checked_mission_act" groups="cim.group_approbateur,cim.group_controleur_local" sequence="80" />
+		
+		<!-- <menuitem name="Missions annulées" id="menu_canceled_mission"
+			parent="menu_cim_mission_workflow" action="canceled_mission_act" sequence="90" /> -->
+		
+		
+		<!-- Sous menu configuration -->
+		<menuitem name="Types de mission" id="menu_mission_type_list"
+			parent="menu_cim_admin_central" action="mission_type_act" sequence="500" />
+			
+		<!-- Sous menu type d'ordre de mission -->
+		<menuitem name="Type ordre de mission" id="menu_type_ordre_mission_list"
+			parent="menu_cim_admin_central" action="type_ordre_mission_act" sequence="525" />
+			
+		<menuitem name="Motifs de mission" id="menu_motif_mission"
+			parent="menu_cim_admin_central" action="motif_mission_act" sequence="530" />
+			
+		<menuitem name="Motifs de rejet" id="menu_motif_rejet"
+			parent="menu_cim_admin_central" action="motif_rejet_act" sequence="535" />
+		
+		<menuitem name="Natures de PJ" id="menu_nature_pj"
+			parent="menu_cim_admin_central" action="cim_nature_pj_act" sequence="550" />
+			
+	</data>
+</odoo>

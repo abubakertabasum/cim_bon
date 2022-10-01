@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+		
+		<delete model="ir.rule" id="hr.hr_dept_comp_rule" />
+		
+		<!-- Initiateur rules -->
+
+		<record model="ir.rule" id="mission_initiateur_rule">
+			<field name="name">Missions : Initiateur</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[('employee_id.user_id', '=', user.id),('state', 'in', ['new', 'initiation'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="cocm_initiateur_rule">
+			<field name="name">COCM : Initiateur</field>
+			<field name="model_id" ref="model_cim_cocm" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[('department_id.member_ids', 'in',user.employee_ids.ids)]</field>
+		</record>
+		
+		<record model="ir.rule" id="project_initiateur_rule">
+			<field name="name">Programme d’activité : Initiateur</field>
+			<field name="model_id" ref="model_cim_project" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+		
+		<record model="ir.rule" id="vehicule_initiateur_rule">
+			<field name="name">Véhicule : Initiateur</field>
+			<field name="model_id" ref="model_cim_vehicule" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record id="hr_dept_initiateur_rule" model="ir.rule">
+	        <field name="name">Direction : Initiateur</field>
+	        <field name="model_id" ref="hr.model_hr_department"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="sectionbudgetaire_initiateur_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Initiateur</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="programmechapitre_initiateur_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Initiateur</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="actionarticle_initiateur_rule" model="ir.rule">
+	        <field name="name">Action article : Initiateur</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_initiateur_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Initiateur</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_initiateur_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Initiateur</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_initiateur_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Initiateur</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<record model="ir.rule" id="agent_initiateur_rule">
+			<field name="name">Agent : Initiateur</field>
+			<field name="model_id" ref="hr.model_hr_employee" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="users_initiateur_rule">
+			<field name="name">Users : Initiateur</field>
+			<field name="model_id" ref="base.model_res_users" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="company_initiateur_rule">
+			<field name="name">Company : Initiateur</field>
+			<field name="model_id" ref="base.model_res_company" />
+			<field name="groups" eval="[(4, ref('cim.group_initiateur'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		
+		<!-- Approbateur rules -->
+		
+		<record model="ir.rule" id="mission_approbateur_rule">
+			<field name="name">Missions : Approbateur</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_approbateur'))]" />
+			<field name="domain_force">[('department_id.member_ids', 'in',user.employee_ids.ids),('state', 'in', ['new', 'initiation', 'approbation', 'checked', 'done'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="cocm_approbateur_rule">
+			<field name="name">COCM : Approbateur</field>
+			<field name="model_id" ref="model_cim_cocm" />
+			<field name="groups" eval="[(4, ref('cim.group_approbateur'))]" />
+			<field name="domain_force">[('department_id.member_ids', 'in',user.employee_ids.ids)]</field>
+		</record>
+		
+		<record model="ir.rule" id="mission_report_approbateur_rule">
+			<field name="name">Missions : Synthese : Approbateur</field>
+			<field name="model_id" ref="model_cim_mission_report" />
+			<field name="groups" eval="[(4, ref('cim.group_approbateur'))]" />
+			<field name="domain_force">[('department_id.member_ids', 'in',user.employee_ids.ids),('state', 'in', ['new', 'initiation', 'approbation', 'checked', 'done'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="activity_mission_report_approbateur_rule">
+			<field name="name">Activités des missions : Synthese : Approbateur</field>
+			<field name="model_id" ref="model_cim_activity_mission_report" />
+			<field name="groups" eval="[(4, ref('cim.group_approbateur'))]" />
+			<field name="domain_force">[('author_id', '=', user.partner_id.id)]</field>
+		</record>
+		
+
+		<!-- Régisseur rules -->
+		
+		<record model="ir.rule" id="mission_regisseur_rule">
+			<field name="name">Missions : Régisseur</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id]),('state', 'in', ['initiation','approbation', 'budgeting', 'validate_sg', 'daf_payment','checked'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="cocm_regisseur_rule">
+			<field name="name">COCM : Régisseur</field>
+			<field name="model_id" ref="model_cim_cocm" />
+			<field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id]),('state', 'in', ['initiation','approbation', 'budgeting', 'validate_sg'])]</field>
+		</record>
+		
+		<record id="sectionbudgetaire_regisseur_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Régisseur</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="programmechapitre_regisseur_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Régisseur</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="actionarticle_regisseur_rule" model="ir.rule">
+	        <field name="name">Action article : Régisseur</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_regisseur_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Régisseur</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_regisseur_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Régisseur</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_regisseur_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Régisseur</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<record model="ir.rule" id="company_regisseur_rule">
+			<field name="name">Company : Régisseur</field>
+			<field name="model_id" ref="base.model_res_company" />
+			<field name="groups" eval="[(4, ref('cim.group_regisseur'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<!-- Ordonnateur rules -->
+		
+		<record model="ir.rule" id="mission_ordonnateur_rule">
+			<field name="name">Missions : Ordonnateur</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id]),('mission_type_id', '=', 1),('state', 'in', ['approbation', 'budgeting', 'validate_sg'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="activity_mission_report_ordonnateur_rule">
+			<field name="name">Activités des missions : Synthese : Ordonnateur</field>
+			<field name="model_id" ref="model_cim_activity_mission_report" />
+			<field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+			<field name="domain_force">[('author_id', '=', user.partner_id.id)]</field>
+		</record>
+		
+		<record id="sectionbudgetaire_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="programmechapitre_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<record id="actionarticle_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Action article : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_ordonnateur_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Ordonnateur</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<!-- Ordonnateur externe rules -->
+		
+		<record model="ir.rule" id="mission_ordonnateur_externe_rule">
+			<field name="name">Missions : Ordonnateur externe</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id]),('mission_type_id', '=', 2),('state', 'in', ['approbation','budgeting', 'validate_sg'])]</field>
+		</record>
+		
+		<record model="ir.rule" id="activity_mission_report_ordonnateur_externe_rule">
+			<field name="name">Activités des missions : Synthese : Ordonnateur externe</field>
+			<field name="model_id" ref="model_cim_activity_mission_report" />
+			<field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+			<field name="domain_force">[('author_id', '=', user.partner_id.id)]</field>
+		</record>
+		
+		<record id="sectionbudgetaire_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="programmechapitre_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="actionarticle_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Action article : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_ordonnateur_externe_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Ordonnateur externe</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_ordonnateur_externe'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<!-- Contrôleur local rules -->
+		
+		<record model="ir.rule" id="mission_controleur_local_rule">
+			<field name="name">Missions : Contrôleur local</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+		
+		<record model="ir.rule" id="cocm_controleur_local_rule">
+			<field name="name">COCM : Contrôleur local</field>
+			<field name="model_id" ref="model_cim_cocm" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+		
+		<record model="ir.rule" id="res_users_controleur_local_rule">
+			<field name="name">Utilisateurs : Contrôleur local</field>
+			<field name="model_id" ref="base.model_res_users" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[(1 ,'=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="project_controleur_local_rule">
+			<field name="name">Programme d’activité : Contrôleur local</field>
+			<field name="model_id" ref="model_cim_project" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+		
+		<record model="ir.rule" id="budget_controleur_local_rule">
+			<field name="name">Budget : Contrôleur local</field>
+			<field name="model_id" ref="model_cim_budget" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+		
+		<record model="ir.rule" id="vehicule_controleur_local_rule">
+			<field name="name">Véhicule : Contrôleur local</field>
+			<field name="model_id" ref="model_cim_vehicule" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record id="hr_dept_controleur_local_rule" model="ir.rule">
+	        <field name="name">Direction : Contrôleur local</field>
+	        <field name="model_id" ref="hr.model_hr_department"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="sectionbudgetaire_controleur_local_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="programmechapitre_controleur_local_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="actionarticle_controleur_local_rule" model="ir.rule">
+	        <field name="name">Action article : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_controleur_local_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_controleur_local_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_controleur_local_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Contrôleur local</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_local'))]" />
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    	</record>
+		
+		<!-- Contrôleur central rules -->
+		
+		<record model="ir.rule" id="mission_controleur_central_rule">
+			<field name="name">Missions : Contrôleur central</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="cocm_controleur_central_rule">
+			<field name="name">COCM : Contrôleur central</field>
+			<field name="model_id" ref="model_cim_cocm" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="res_users_controleur_central_rule">
+			<field name="name">Utilisateurs : Contrôleur central</field>
+			<field name="model_id" ref="base.model_res_users" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="project_controleur_central_rule">
+			<field name="name">Programme d’activité : Contrôleur central</field>
+			<field name="model_id" ref="model_cim_project" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="budget_controleur_central_rule">
+			<field name="name">Budget : Contrôleur central</field>
+			<field name="model_id" ref="model_cim_budget" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="vehicule_controleur_central_rule">
+			<field name="name">Véhicule : Contrôleur central</field>
+			<field name="model_id" ref="model_cim_vehicule" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record model="ir.rule" id="department_controleur_central_rule">
+			<field name="name">Direction : Contrôleur central</field>
+			<field name="model_id" ref="hr.model_hr_department" />
+			<field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+			<field name="domain_force">[(1, '=', 1)]</field>
+		</record>
+		
+		<record id="sectionbudgetaire_controleur_central_rule" model="ir.rule">
+	        <field name="name">Section budgetaire : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_sectionbudgetaire"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+		
+		<record id="programmechapitre_controleur_central_rule" model="ir.rule">
+	        <field name="name">Programme chapitre : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_programmechapitre"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+    	
+    	<record id="actionarticle_controleur_central_rule" model="ir.rule">
+	        <field name="name">Action article : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_actionarticle"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+    	
+    	<record id="activiteparagraphe_controleur_central_rule" model="ir.rule">
+	        <field name="name">Activite paragraphe : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_activiteparagraphe"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+    	
+    	<record id="paragrapherubrique_controleur_central_rule" model="ir.rule">
+	        <field name="name">Paragraphe rubrique : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_paragrapherubrique"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+    	
+    	<record id="cim_budget_line_controleur_central_rule" model="ir.rule">
+	        <field name="name">Lignes budgétaires : Contrôleur central</field>
+	        <field name="model_id" ref="model_cim_budget_line"/>
+	        <field name="groups" eval="[(4, ref('cim.group_controleur_central'))]" />
+	        <field name="domain_force">[(1, '=', 1)]</field>
+    	</record>
+		
+		<!-- Administrateur local rules -->
+
+		<!-- Consultation service rules -->
+		
+		<record model="ir.rule" id="mission_consultation_service_rule">
+			<field name="name">Missions : Consultation par service</field>
+			<field name="model_id" ref="model_cim_mission" />
+			<field name="groups" eval="[(4, ref('cim.group_consultation_service'))]" />
+			<field name="domain_force">[('department_id.member_ids', 'in',user.employee_ids.ids)]</field>
+		</record>
+		
+		
+	</data>
+</odoo>

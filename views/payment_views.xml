@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+		<!-- Paiement view filter -->
+		<record id="view_cim_paiement_participant_filter" model="ir.ui.view">
+            <field name="name">cim.paiement.participant.filter</field>
+            <field name="model">cim.paiement.participant</field>
+            <field name="arch" type="xml">
+                <search string="Paiement">
+                    <field name="participant_id"/>
+                    <field name="date_paiement"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Participant" name="participant" domain="[]" context="{'group_by': 'participant_id'}"/>
+                        <filter string="Date paiement" name="date_paiement" domain="[]" context="{'group_by': 'date_paiement'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<!-- Payment view tree -->
+		<record model="ir.ui.view" id="cim_paiement_participant_tree">
+			<field name="name">cim.paiement.participant.tree</field>
+			<field name="model">cim.paiement.participant</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="participant_id" />
+					<field name="mission_id" />
+					<field name="type" />
+					<field name="date_paiement" />
+					<field name="montant_a_payer" />
+					<field name="montant_paye" sum="Montant payé"/>
+					<field name="reste_a_payer" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Payment view form -->
+		<record model="ir.ui.view" id="cim_paiement_participant_form">
+			<field name="name">cim.paiement.participant.form</field>
+			<field name="model">cim.paiement.participant</field>
+			<field name="arch" type="xml">
+				<form string="Paiement de participant">
+					<sheet>
+						<group>
+							<group>
+								<field name="participant_id" />
+								<field name="mission_id" />
+								<field name="montant_a_payer" />
+								<field name="montant_paye" />
+								<field name="reste_a_payer" />
+							</group>
+							<group>
+								<field name="type" />
+								<field name="date_paiement" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</odoo>

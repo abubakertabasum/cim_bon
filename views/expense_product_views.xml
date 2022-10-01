@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<data>
+		
+		<record id="view_cim_product_expense_inherit_search" model="ir.ui.view">
+			<field name="name">cim.expense.product.search.inherit</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_search_view" />
+			<field name="arch" type="xml">
+				
+				<filter name="consumable" position="after">
+					<filter string="Est un produit" name="is_product" domain="[('is_product','=',True)]"/>
+				</filter>
+				
+			</field>
+		</record>
+
+		<record id="view_cim_product_expense_inherit_form" model="ir.ui.view">
+			<field name="name">cim.product.expense.inherit.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="hr_expense.product_product_expense_form_view" />
+			<field name="arch" type="xml">
+				
+				<field name="type" position="before">
+					<field name="is_product" />
+				</field>
+				
+			</field>
+		</record>
+		
+        <record id="cim_expense_product" model="ir.actions.act_window">
+            <field name="name">Taux</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="context">{"default_can_be_expensed": 1, 
+            						'default_type': 'service', 
+            						"default_is_product": 1,
+            						"search_default_is_product":1}</field>
+            <field name="domain">[('can_be_expensed', '=', True)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Créer un nouveau taux.
+              </p>
+            </field>
+        </record>
+        
+        <record id="cim_expense_product_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="cim_expense_product"/>
+        </record>
+
+        <record id="cim_expense_product_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="cim_expense_product"/>
+        </record>
+
+        <record id="cim_expense_product_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_expense.product_product_expense_form_view"/>
+            <field name="act_window_id" ref="cim_expense_product"/>
+        </record>
+		
+		
+		<!-- Sous menu Configuration -->
+		<menuitem name="Gestion des taux" id="menu_expense_product" parent="menu_cim_admin_central"
+			sequence="600" action="cim_expense_product" />
+
+	</data>
+</odoo>

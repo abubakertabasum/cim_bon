@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_rejeter_mission_wizard" model="ir.ui.view">
+		<field name="name">rejeter.mission.wizard.form</field>
+		<field name="model">rejeter.mission.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<field name="type" invisible="1"/>
+				<field name="mission_id" invisible="1"/>
+				<field name="cocm_id" invisible="1"/>
+				<group>
+					<group>
+						<field name="motif_rejet_id"/>
+						<field name="description_rejet"/>
+					</group>
+					<group>
+						<field name="date_rejet" readonly="1"/>
+					</group>
+				</group>
+				<footer>
+					<button name="action_confirm" string="Confirmer"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+	
+	<record id="action_rejeter_mission_wizard"
+		model="ir.actions.act_window">
+		<field name="name">Vous voulez rejeter la demande ?</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">rejeter.mission.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_rejeter_mission_wizard" />
+		<field name="target">new</field>
+	</record>
+
+</odoo>
+        

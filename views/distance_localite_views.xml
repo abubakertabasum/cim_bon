@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<!-- Distance localite form view -->
+		<record model="ir.ui.view" id="cim_distance_localite_form">
+			<field name="name">cim.distance.localite.form</field>
+			<field name="model">cim.distance.localite</field>
+			<field name="arch" type="xml">
+				<form string="Distance entre localités">
+					<sheet>
+						<div class="oe_title">
+							<h2 position="after">
+								<label for="name" class="oe_edit_only" />
+								<h3>
+									<field name="name" />
+								</h3>
+							</h2>
+						</div>
+						<group>
+							<group>
+								<field name="loc_a_id" />
+								<field name="loc_b_id" />
+								<field name="distance_ab" />
+								<field name="distance_symetrique" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- distance localite tree view -->
+		<record model="ir.ui.view" id="cim_distance_localite_tree">
+			<field name="name">cim.distance.localite.tree</field>
+			<field name="model">cim.distance.localite</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="loc_a_id" />
+					<field name="loc_b_id" />
+					<field name="distance_ab" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="cim_distance_localite_act"
+			model="ir.actions.act_window">
+			<field name="name">Distances entre localités</field>
+			<field name="res_model">cim.distance.localite</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"></p>
+			</field>
+		</record>
+
+
+		<!-- Sous menu de parametres -->
+
+		<menuitem name="Distances entre localités"
+			id="menu_cim_new_budget" parent="menu_cim_admin_central"
+			sequence="1000" action="cim_distance_localite_act" />
+
+	</data>
+</odoo> 

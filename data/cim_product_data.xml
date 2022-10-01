@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+	
+		<record model="product.attribute" id="cim_product_attribute_categ" >
+            <field name="name">Catégorie</field>
+            <field name="sequence">1</field>
+        </record>
+        
+        <record model="product.attribute" id="cim_product_attribute_zone" >
+            <field name="name">Zone</field>
+            <field name="sequence">2</field>
+        </record>
+        
+        <record id="cim_product_attribute_value_categ1" model="product.attribute.value">
+            <field name="name">Catégorie I</field>
+            <field name="attribute_id" ref="cim_product_attribute_categ" />
+        </record>
+        <record id="cim_product_attribute_value_categ2" model="product.attribute.value">
+            <field name="name">Catégorie II</field>
+            <field name="attribute_id" ref="cim_product_attribute_categ" />
+        </record>
+        <record id="cim_product_attribute_value_categ3" model="product.attribute.value">
+            <field name="name">Catégorie III</field>
+            <field name="attribute_id" ref="cim_product_attribute_categ" />
+        </record>
+        <record id="cim_product_attribute_value_categ4" model="product.attribute.value">
+            <field name="name">Catégorie IV</field>
+            <field name="attribute_id" ref="cim_product_attribute_categ" />
+        </record>
+        
+        <record id="cim_product_attribute_value_zone_a" model="product.attribute.value">
+            <field name="name">Zone A</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+        <record id="cim_product_attribute_value_zone_b" model="product.attribute.value">
+            <field name="name">Zone B</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+        <record id="cim_product_attribute_value_zone_c" model="product.attribute.value">
+            <field name="name">Zone C</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+		<record id="cim_product_attribute_value_zone_i" model="product.attribute.value">
+            <field name="name">Zone I</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+        <record id="cim_product_attribute_value_zone_ii" model="product.attribute.value">
+            <field name="name">Zone II</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+        <record id="cim_product_attribute_value_zone_iii" model="product.attribute.value">
+            <field name="name">Zone III</field>
+            <field name="attribute_id" ref="cim_product_attribute_zone" />
+        </record>
+		
+		<record id="cim.cim_expense_product_accommodation" model="product.template">
+            <field name="name">Hébergement</field>
+            <field name="sale_ok" eval="False" />
+            <field name="purchase_ok" eval="False" />
+            <field name="can_be_expensed" eval="True" />
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP_ACC</field>
+            <field name="categ_id" ref="product.cat_expense"/>
+            <field name="company_id" eval="False" />
+        </record>
+        
+        <record id="cim_product_product_acc_1a" model="product.product">
+            <field name="standard_price">45000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_1b" model="product.product">
+            <field name="standard_price">45000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_1c" model="product.product">
+            <field name="standard_price">45000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2a" model="product.product">
+            <field name="standard_price">20000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2b" model="product.product">
+            <field name="standard_price">18000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2c" model="product.product">
+            <field name="standard_price">17000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3a" model="product.product">
+            <field name="standard_price">18000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3b" model="product.product">
+            <field name="standard_price">16500.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3c" model="product.product">
+            <field name="standard_price">15000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4a" model="product.product">
+            <field name="standard_price">14000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4b" model="product.product">
+            <field name="standard_price">13000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4c" model="product.product">
+            <field name="standard_price">12000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_expense_product_restoration" model="product.template">
+            <field name="name">Restauration</field>
+            <field name="sale_ok" eval="False" />
+            <field name="purchase_ok" eval="False" />
+            <field name="can_be_expensed" eval="True" />
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP_RES</field>
+            <field name="categ_id" ref="product.cat_expense"/>
+            <field name="company_id" eval="False" />
+        </record>
+        
+        <record id="cim_product_product_res_1a" model="product.product">
+            <field name="standard_price">25000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_1b" model="product.product">
+            <field name="standard_price">20000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_1c" model="product.product">
+            <field name="standard_price">15000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2a" model="product.product">
+            <field name="standard_price">10000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2b" model="product.product">
+            <field name="standard_price">9000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2c" model="product.product">
+            <field name="standard_price">7000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3a" model="product.product">
+            <field name="standard_price">9000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3b" model="product.product">
+            <field name="standard_price">7000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3c" model="product.product">
+            <field name="standard_price">5000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4a" model="product.product">
+            <field name="standard_price">6000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_a')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4b" model="product.product">
+            <field name="standard_price">5000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_b')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4c" model="product.product">
+            <field name="standard_price">4000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_c')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+		
+		<!-- Tarification pour les missions externes -->
+		
+		<record id="cim_product_product_acc_1i" model="product.product">
+            <field name="standard_price">70000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_1ii" model="product.product">
+            <field name="standard_price">90000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_1iii" model="product.product">
+            <field name="standard_price">110000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2i" model="product.product">
+            <field name="standard_price">50000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2ii" model="product.product">
+            <field name="standard_price">80000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_2iii" model="product.product">
+            <field name="standard_price">85000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3i" model="product.product">
+            <field name="standard_price">40000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3ii" model="product.product">
+            <field name="standard_price">70000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_3iii" model="product.product">
+            <field name="standard_price">75000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4i" model="product.product">
+            <field name="standard_price">35000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4ii" model="product.product">
+            <field name="standard_price">60000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_acc_4iii" model="product.product">
+            <field name="standard_price">65000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_accommodation"/>
+        </record>
+        
+        <record id="cim_product_product_res_1i" model="product.product">
+            <field name="standard_price">30000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_1ii" model="product.product">
+            <field name="standard_price">40000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_1iii" model="product.product">
+            <field name="standard_price">50000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ1'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2i" model="product.product">
+            <field name="standard_price">20000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2ii" model="product.product">
+            <field name="standard_price">35000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_2iii" model="product.product">
+            <field name="standard_price">45000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ2'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3i" model="product.product">
+            <field name="standard_price">15000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3ii" model="product.product">
+            <field name="standard_price">30000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_3iii" model="product.product">
+            <field name="standard_price">40000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ3'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4i" model="product.product">
+            <field name="standard_price">10500.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_i')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4ii" model="product.product">
+            <field name="standard_price">25000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_ii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        <record id="cim_product_product_res_4iii" model="product.product">
+            <field name="standard_price">35000.0</field>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('cim.cim_product_attribute_value_categ4'), ref('cim.cim_product_attribute_value_zone_iii')])]"/>
+            <field name="product_tmpl_id" ref="cim.cim_expense_product_restoration"/>
+        </record>
+        
+        
+	</data>
+</odoo>

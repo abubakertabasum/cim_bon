@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<!-- Top menu COCM -->
+		<menuitem name="COCM" id="menu_cim_cocm"
+			parent="menu_cim" sequence="200" />
+		
+		
+		<!-- COCM view filter -->
+		<record id="view_cim_cocm_filter" model="ir.ui.view">
+            <field name="name">cim.cocm.filter</field>
+            <field name="model">cim.cocm</field>
+            <field name="arch" type="xml">
+                <search string="COCM">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <separator />
+                    <field name="company_id"/>
+                    <separator />
+                    <filter domain="[('state', '=', 'new')]" string="Nouvelle COCM" name="new"/>
+                    <filter domain="[('state', '=', 'initiation')]" string="COCM initiées" name="initiation"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Programme d'activités" name="project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Structure" name="establishment" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Statut" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <!-- COCM Rejet view tree -->
+		<record model="ir.ui.view" id="cim_cocm_rejet_tree">
+			<field name="name">cim.cocm.rejet.tree</field>
+			<field name="model">cim.mission.rejet</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="cocm_id" />
+					<field name="motif_rejet_id" />
+					<field name="auteur_rejet_id" />
+					<field name="date_rejet" />
+					<field name="state_rejet_debut" />
+					<field name="state_rejet_fin" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- COCM Rejet view form -->
+		<record model="ir.ui.view" id="cim_cocm_rejet_form">
+			<field name="name">cim.cocm.rejet.form</field>
+			<field name="model">cim.mission.rejet</field>
+			<field name="arch" type="xml">
+				<form string="Rejet des COCM">
+					<sheet>
+						<group>
+							<group>
+								<field name="cocm_id" />
+								<field name="motif_rejet_id" />
+								<field name="auteur_rejet_id" />
+								<field name="date_rejet" />
+							</group>
+							<group>
+								<field name="state_rejet_debut" />
+								<field name="state_rejet_fin" />
+							</group>
+						</group>
+						<group>
+							<field name="description_rejet" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+        
+        <!-- action rejet COCM -->
+    	<record model="ir.actions.act_window" id="action_view_rejet_cocm">
+			<field name="name">Rejets</field>
+			<field name="res_model">cim.mission.rejet</field>
+			<field name="view_mode">tree</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('cim_cocm_rejet_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('cim_cocm_rejet_form')})]"/>
+			<field name="domain">[('cocm_id', '=', active_id)]</field>
+		</record>
+		
+		<!-- COCM form view -->
+		<record model="ir.ui.view" id="cim_cocm_form">
+			<field name="name">cim.cocm.form</field>
+			<field name="model">cim.cocm</field>
+			<field name="arch" type="xml">
+				<form string="COCM">
+					<header>
+						<button name="act_launch_cocm" string="Initier"
+							type="object" states="new"
+							groups="cim.group_initiateur"
+							class="oe_highlight"
+							confirm="Vous confirmer l'initiation de la COCM ?" />
+						
+ 						<button name="act_confirm_cocm" string="Approuver"
+							type="object" states="initiation"
+							groups="cim.group_approbateur"
+							class="oe_highlight"
+							confirm="Vous confirmer l'approbation de la COCM ?" />
+						
+						<button name="act_budget_cocm" string="Budgétiser"
+							type="object" states="approbation"
+							groups="cim.group_regisseur"
+							class="oe_highlight"
+							confirm="Vous confirmer la budgétisation de la COCM ?" />
+							
+						<button name="%(action_rejeter_mission_wizard)d" string="Rejeter"
+							type="action" context="{'default_type': 'cocm'}" states="initiation,approbation,budgeting,validate_sg" />
+						
+						<button name="act_validate_cocm" string="Valider"
+							type="object" states="budgeting"
+							groups="cim.group_ordonnateur,cim.group_ordonnateur_externe"
+							class="oe_highlight"
+							confirm="Vous confirmer la validation de la COCM ?" />
+							
+						<button name="act_autoriser_cocm" string="Autoriser"
+							type="object" states="validate_sg"
+							groups="cim.group_ordonnateur_externe"
+							class="oe_highlight"
+							confirm="Vous confirmer l'autorisation de la COCM ?" />
+							
+						<button name="act_cancel_cocm" string="Abandonner"
+							type="object" states="new" groups="cim.group_initiateur" 
+							confirm="Vous confirmer l'abandon de la COCM ?"/>
+						
+						
+							
+						<field name="state" widget="statusbar"
+							statusbar_visible="new,initiation,approbation,budgeting,validate_sg,autorise"/>
+					</header>
+					<sheet>
+						
+						<div class="oe_button_box" name="button_box">
+							<button type="action" class="oe_stat_button" icon="fa-reply" name="%(action_view_rejet_cocm)d" attrs="{'invisible': [('nbr_rejet', '=', 0)]}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="nbr_rejet"/>
+		                            </span>
+		                            <span class="o_stat_text">Rejets</span>
+		                        </div>
+		                    </button>
+						</div>
+						<div class="oe_title">
+							<h1 position="after">
+								<label for="name" class="oe_edit_only" />
+								<h3>
+									<field name="name" />
+								</h3>
+							</h1>
+						</div>
+						<group>
+							<group  >
+								<field name="object" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />								
+							</group>
+							<group  >
+								<field name="motif_mission_id" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								<field name="description"  attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" />
+								<field name="currency_id" options="{'no_create': True, 'no_open': True}" invisible="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page name="info" string="Information générale" attrs="{'readonly': [('state', 'in', ['checked','done','canceled'])]}">
+								<group>
+									<group string="Informations">
+										<field name="project_id" string="Prog. activité" options="{'no_create': True, 'no_open': True}"  attrs="{'readonly': [('state', 'not in', ['new','initiation','approbation'])]}"/>
+										<field name="credit_dispo" string="Crédits diponibles" />
+										<field name="budget_line_id" invisible="1"/>
+										<field name="bailleur_id"  attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="department_id" string="Svce. demandeur" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="establishment_id" invisible="1"/>	
+										<field name="type_ordre_mission_id" string="Type ordre mission" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>										
+									</group>
+									<group string="Période">
+										<field name="date_from" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="date_to" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+										<field name="duree_mission"/>
+									</group>
+									<group>
+										<field name="company_id" invisible="1"/>
+										<field name="employee_id" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}"/>
+									</group>
+								</group>
+								
+                                <group string="Objectifs à atteindre" >
+                                    <field name="objectif_missions" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="mission_id" invisible="1" />
+                                            <field name="objectif_mission" />
+                                            <field name="objectif_atteint" style="width:20%%"/>
+                                            <field name="objectif_observations" />                                            
+                                        </tree>
+                                    </field>
+                                </group>
+                                <field name="sondage_objectif" string="Sondage" />
+								<group string="Itinéraires">
+									<field name="itineraire_mission_ids" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" nolabel="1">
+										<tree editable="bottom">
+											<field name="loc_id" required="1"/>
+											<field name="depart"/>
+											<field name="date_arrivee" invisible="1"/>
+											<field name="duree" sum="Durée" attrs="{'readonly': [('depart', '!=', False)]}"/>
+											<field name="description"/>
+										</tree>
+									</field>
+								</group>
+								<field name="distance_mission" invisible="1"/>
+								<group string="Participants" >
+									<field name="participant_ids" nolabel="1" attrs="{'readonly': [('state', 'not in', ['new','initiation'])]}" options="{'no_create': True, 'no_open': True}">
+	 									<tree editable="bottom">
+	 										<field name="participant_id" string="Nom - Prénom" options="{'no_create': True, 'no_open': True}" attrs="{'required' : [('state','=','new')]}"/>
+	 										<field name="matricule" />
+	 										<field name="work_phone" invisible="1" />
+		 									<field name="company_id" />
+		 									<field name="department_id" />
+		 									<field name="role_mission_id" />
+		 									<field name="est_pec" string="PEC"/>
+		 									<field name="state_mission" invisible="1" />
+		 									<field name="state" />
+	 									</tree>
+ 									</field>
+								</group>
+							</page> 
+							<page name="pj" string="Pièce(s) justificative(s)" widget="one2many_list" attrs="{'readonly': [('state', 'not in', ['new','initiation','approbation'])]}">
+								<field name="attachment_ids" widget="one2many_list">
+									<tree editable="bottom">
+										<field name="nature_pj_id" required="1"/>
+										<field name="type" invisible="1"/>
+										<field name="name" invisible="1"/>
+										<field name="datas"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- COCM tree view -->
+		<record model="ir.ui.view" id="cim_cocm_tree">
+			<field name="name">cim.cocm.tree</field>
+			<field name="model">cim.cocm</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="establishment_id"/>
+					<field name="project_id"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+					<field name="description"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="new_cocm_action" model="ir.actions.act_window">
+			<field name="name">Nouvelle COCM</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{'search_default_new': 1}</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face">
+					Créez une nouvelle COCM.
+				</p>
+				<p>
+					CIM vous aide à gérer facilement vos COCM.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="approuver_cocm_act">
+			<field name="name">COCM à approuver</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'initiation')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de COCM à approuver
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="budgetiser_cocm_act">
+			<field name="name">COCM à budgétiser</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'approbation')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de COCM à budgétiser
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="valider_cocm_act">
+			<field name="name">COCM à valider</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'budgeting')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de COCM à valider
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="autoriser_cocm_act">
+			<field name="name">COCM à autoriser</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'validate_sg')]</field>
+			<field name="context">{
+				'create': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de COCM à autoriser
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem name="Initier une COCM" id="menu_cim_new_cocm"
+			parent="menu_cim_cocm" action="new_cocm_action" groups="cim.group_initiateur,cim.group_controleur_local" sequence="10" />
+		
+		<menuitem name="COCM à approuver" id="menu_approuver_cocm"
+			parent="menu_cim_cocm" action="approuver_cocm_act" groups="cim.group_approbateur,cim.group_controleur_local" sequence="20" />
+		
+		<menuitem name="COCM à budgétiser" id="menu_budgetiser_cocm"
+			parent="menu_cim_cocm" action="budgetiser_cocm_act" groups="cim.group_regisseur,cim.group_controleur_local" sequence="30" />
+			
+		<menuitem name="COCM à valider" id="menu_valider_cocm"
+			parent="menu_cim_cocm" action="valider_cocm_act" groups="cim.group_ordonnateur_externe,cim.group_controleur_local" sequence="40" />
+		
+		<menuitem name="COCM à autoriser" id="menu_autoriser_cocm"
+			parent="menu_cim_cocm" action="autoriser_cocm_act" groups="cim.group_ordonnateur_externe,cim.group_controleur_local" sequence="50" />
+		
+
+	</data>
+</odoo> 

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="cim.report_mission_synthese_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page" >
+					<h5 style="text-align:center;">
+						<div class="row justify-content-between">
+							<div class="col-4"
+								style="float:left;font-size:15px; font-weight:bold">
+								<div t-foreach="o.department_id" t-as="e">
+									<span t-field="e.timbre" />
+								</div>
+							</div>
+							<div class="col-4 mb4">
+			                    <img t-if="o.establishment_id.logo" t-att-src="image_data_uri(o.establishment_id.logo)" style="width:50%;" alt="Logo"/>
+			                </div>
+							<div class="col-4 text-right"
+								style="float:right; padding:2px;">
+								<div style="padding:5px;text-align:center;">
+									<div style="font-size:15px; font-weight:bold;">BURKINA FASO</div>
+									<div style="font-size:15px;">**********</div>
+									<div style="font-size:15px;">Unité-Progrés-Justice</div>
+								</div>
+							</div>
+						</div>
+						
+						<div style="clear:both;"></div>
+						<br></br>
+						<div style="text-decoration: underline;text-align:center;font-weight:bold;"><u>COMPTE RENDU DE LA MISSION</u></div>
+					</h5>
+					
+					<br></br>
+					<br></br>
+					<div style="text-align:left;">
+						<b>N° de la mission: </b> <span style="font-size:15px;" t-field="o.num_mission" /> <br></br>
+						<b>Type de mission: </b> <span style="font-size:15px;" t-field="o.mission_type_id" /> <br></br>
+						<b>Itinéraire(s) et Durée:</b> <br></br>
+						<span style="font-size:15px;" t-foreach="o.itineraire_mission_ids" t-as="i">
+							<span style= "text-align:left;" t-field="i.loc_id.name" /> -
+							<span style= "text-align:left;" t-field="i.duree" /> jour(s)
+						</span>	
+						<br></br>
+						<b>Départ: </b> <span style="font-size:15px;" t-field="o.date_from" /> <br></br>
+						<b>Retour: </b> <span style="font-size:15px;" t-field="o.date_to" /> <br></br>
+						<b>Motif: </b> <span style="font-size:15px;" t-field="o.motif_mission_id" /> <br></br>
+						<b>Objet: </b> <span style="font-size:15px;" t-field="o.object" /> <br></br>
+						<b>Rédacteur: </b> <span style="font-size:15px;" t-field="o.rs_redacteur" /> <br></br>				
+					</div>	
+
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+
+						<tr>
+							<th style="border:1px soild #000; width:40%;">Chef de mission</th>
+							<td style="border:1px soild #000">
+								<span t-foreach="o.participant_ids" t-as="p">
+									<span t-if="p.role_mission_id.code == 'M'">
+										<span>
+											<span t-field="p.participant_id.name" />
+										</span>
+									</span>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th style="border:1px soild #000; width:40%;">Autres membres</th>
+							<td style="border:1px soild #000">
+								<span t-foreach="o.participant_ids" t-as="p">
+									<span t-if="p.role_mission_id.code != 'M'">
+										<span>
+											<span t-field="p.participant_id.name" />
+										</span>
+									</span>
+								</span>
+							</td>
+						</tr>
+					</table>
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+						
+					</table>
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+						<tr>
+							<th style="border:1px soild #000;width:40%;">Résumé succint de la mission</th>
+							<td style="padding:8px;"><span t-field="o.rs_resume"/>
+							</td>
+						</tr>
+					</table>
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+						<tr>
+							<th style="border:1px soild #000;width:40%;">Enseignement(s) de la mission</th>
+							<td style="padding:8px;"><span t-field="o.rs_enseignements"/>
+							
+							</td>
+						</tr>
+					</table>
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+						<tr>
+							<th style="border:1px soild #000 ;width:40%;">Limite(s) de la mission</th>
+							<td style="padding:8px;"><span t-field="o.rs_limites"/>
+							</td>
+						</tr>
+					</table>
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;">
+						<tr>
+							<th style="border:1px soild #000 ;width:40%;">Suggestion(s) pour la prochaine fois</th>
+							<td style="padding:8px;"><span t-field="o.rs_suggestions"/>
+							</td>
+						</tr>
+					</table>
+					
+					<table class="table table-bordered table-sm border border-dark"
+							border="1" style="border-collapse:collapse;" t-if="o.evaluation_ids">
+						<tr>
+							<th style="border:1px soild #000;width:40%;">Critère d'évaluation</th>
+							<th style="border:1px soild #000 ;width:40%;">Valeur ciblée</th>
+							<th style="border:1px soild #000 ;width:40%;">Valeur mésurée</th>
+							<th style="border:1px soild #000 ;width:40%;">Taux en %</th>
+						</tr>
+						<div t-foreach="o.evaluation_ids" t-as="t">
+							<tr>
+							 	<td style="padding:8px;">
+									<span t-field="t.critere_id"/>
+								</td> 
+								<td style="padding:8px;">
+									<span t-field="t.val_ciblee"/>
+								</td>
+								<td style="padding:8px;">
+									<span t-field="t.val_reelle"/>
+								</td>
+								<td style="padding:8px;">
+									<span t-field="t.taux_evaluation"/>
+								</td>
+							</tr>
+						</div>
+					</table>
+				</div>
+				<div >Date : 
+							
+					<span t-field="o.date_from" />
+				</div>
+				<br></br>
+				<div style="font-weight : 700;float:left ;gras;">Signature du rédacteur :</div>
+				<div class="row justify-content-between">
+				</div>
+			</t>
+				<div class="footer">
+					<div class="row">
+						<div class="col-xs-2 pull-left">
+							<small>
+								<span>Page</span>
+								<span class="page" />
+								/
+								<span class="topage" />
+							</small>
+						</div>
+					</div>
+				</div>
+		</template>
+
+		<template id="report_mission_synthese">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_mission_synthese_document" t-lang="lang" /></t>
+			</t>
+		</template>
+	</data>
+</odoo>

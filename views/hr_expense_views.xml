@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<!-- <record model="ir.ui.menu" id="account.menu_finance"> <field name="groups_id" 
+			eval="[(6,0,[ref('make_invisible')])]" /> </record> -->
+
+		<!-- Frais de mission view form -->
+		<record model="ir.ui.view" id="cim_expense_form">
+			<field name="name">cim.expense.form</field>
+			<field name="model">cim.expense</field>
+			<field name="arch" type="xml">
+				<form string="Expenses" class="o_expense_form">
+					<sheet>
+						<header>
+							<field name="state" widget="statusbar" statusbar_visible="draft,done" />
+						</header>
+						<div class="oe_title">
+							<label for="name" />
+							<h1>
+								<field name="name" placeholder="e.g. Déjeuner avec un Client" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="product_id"
+									context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}" />
+								<field name="unit_amount" required="1" widget="monetary"
+									options="{'currency_field': 'currency_id'}" />
+								<label for="quantity" />
+								<div>
+									<field name="quantity" class="oe_inline" />
+									<field name="product_uom_id" widget="selection" class="oe_inline"
+										groups="uom.group_uom" />
+								</div>
+								<field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]"
+									widget="many2many_tags" />
+							</group>
+							<group>
+								<field name="reference" />
+								<field name="date" />
+								<field name="account_id" domain="[('internal_type', '=', 'other')]"
+									groups="account.group_account_user" invisible="1" />
+								<field name="employee_id" groups="hr_expense.group_hr_expense_user"
+									options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', context.get('employee_ids'))]" />
+								<field name="sheet_id" invisible="1" />
+								<field name="currency_id" groups="base.group_multi_currency" />
+								<field name="analytic_account_id" groups="analytic.group_analytic_accounting"
+									invisible="1" />
+								<field name="analytic_tag_ids" widget="many2many_tags"
+									groups="analytic.group_analytic_tags" invisible="1" />
+								<field name="company_id" groups="base.group_multi_company" />
+							</group>
+							<group>
+								<field name="total_amount" widget='monetary'
+									options="{'currency_field': 'currency_id'}" />
+								<label for="payment_mode" />
+								<div>
+									<field name="payment_mode" widget="radio" />
+								</div>
+							</group>
+
+						</group>
+						<div>
+							<field name="description" class="oe_inline" placeholder="Notes..." />
+						</div>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- frais de mission view tree -->
+		<record model="ir.ui.view" id="cim_expense_tree">
+			<field name="name">cim.expense.tree</field>
+			<field name="model">cim.expense</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="date" invisible="1" />
+					<field name="employee_id" string="Participant" />
+					<field name="product_id" string="Article" />
+					<field name="name" widget="section_and_note_text" />
+					<field name="product_uom_id" invisible="1" />
+					<field name="quantity" string="Quantité" />
+					<field name="tax_ids" invisible="1" />
+					<field name="unit_amount" string="Montant unitaire" />
+					<field name="total_amount" string="Montant total" />
+					<field name="untaxed_amount" invisible="1" />
+					<field name="analytic_account_id" invisible="1" />
+					<field name="account_id" invisible="1" />
+					<field name="total_amount_company" invisible="1" />
+					<field name="company_id" invisible="1" />
+					<field name="sheet_id" invisible="1" />
+					<field name="display_type" invisible="1" />
+					<field name="mission_id" invisible="1" />
+					<field name="state" string="Statut" />
+				</tree>
+			</field>
+		</record>
+
+	</data>
+</odoo>

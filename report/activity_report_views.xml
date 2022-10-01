@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<record id="crm_activity_mission_report_view_graph" model="ir.ui.view">
+			<field name="name">cim.activity.mission.report.graph</field>
+			<field name="model">cim.activity.mission.report</field>
+			<field name="arch" type="xml">
+				<graph string="Analyse des activités" stacked="True">
+					<field name="mail_activity_type_id" type="col" />
+					<field name="date" interval="day" type="row" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="crm_activity_mission_report_view_pivot" model="ir.ui.view">
+			<field name="name">cim.activity.mission.report.pivot</field>
+			<field name="model">cim.activity.mission.report</field>
+			<field name="arch" type="xml">
+				<pivot string="Analyse des activités" disable_linking="True">
+					<field name="mail_activity_type_id" type="col" />
+					<field name="date" interval="day" type="row" />
+				</pivot>
+			</field>
+		</record>
+
+		<record id="cim_activity_mission_report_action"
+			model="ir.actions.act_window">
+			<field name="name">Analyse des activités</field>
+			<field name="res_model">cim.activity.mission.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,pivot</field>
+			<field name="domain">[]</field>
+		</record>
+
+		<menuitem name="Activités" id="menu_cim_analyses_activity_mission"
+			parent="menu_cim_synthese_analyses"
+			action="cim_activity_mission_report_action" sequence="40" />
+
+	</data>
+</odoo>

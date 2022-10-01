@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		
+		<!-- Top menu Synthèse -->
+		<menuitem name="Synthèses" id="menu_cim_synthese"
+			parent="menu_cim" sequence="300"/>
+		
+		<!-- Mission view graph -->
+        <record id="cim_mission_view_graph" model="ir.ui.view">
+            <field name="name">cim.mission.graph</field>
+            <field name="model">cim.mission</field>
+            <field name="arch" type="xml">
+                <graph string="Analyse de Mission">
+                    <field name="create_date" type="col"/>
+                </graph>
+            </field>
+        </record>
+		
+		
+		<record model="ir.actions.act_window" id="synthese_mission_act">
+			<field name="name">Missions</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="domain">[]</field>
+			<field name="context">{
+				'create': False,
+				'write': False,
+				'delete': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de missions
+				</p>
+			</field>
+		</record>
+		
+		<!-- COCM view graph -->
+        <record id="cim_cocm_view_graph" model="ir.ui.view">
+            <field name="name">cim.cocm.graph</field>
+            <field name="model">cim.cocm</field>
+            <field name="arch" type="xml">
+                <graph string="Analyse de COCM">
+                    <field name="create_date" type="col"/>
+                </graph>
+            </field>
+        </record>
+		
+		<record model="ir.actions.act_window" id="synthese_cocm_act">
+			<field name="name">COCM</field>
+			<field name="res_model">cim.cocm</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="domain">[]</field>
+			<field name="context">{
+				'create': False,
+				'write': False,
+				'delete': False,
+				}
+			</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_empty_folder">
+					Pas de COCM
+				</p>
+			</field>
+		</record>
+
+		
+		<menuitem name="Missions" id="menu_cim_synthese_mission"
+			parent="menu_cim_synthese" action="synthese_mission_act" sequence="10"/>
+		
+		<menuitem name="COCM" id="menu_cim_synthese_cocm"
+			parent="menu_cim_synthese" action="synthese_cocm_act" sequence="20"/>
+
+	</data>
+</odoo>

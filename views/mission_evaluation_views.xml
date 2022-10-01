@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		<!-- Mission evaluation tree view -->
+		<record model="ir.ui.view" id="cim_mission_eval_tree">
+			<field name="name">cim.mission.tree</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="mission_type_id"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+					<field name="taux_moyen"/>
+					<field name="state_eval"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Mission evaluation form view -->
+		<record model="ir.ui.view" id="cim_mission_eval_form">
+			<field name="name">cim.mission.form</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<form string="Mission à évaluer">
+					<header>
+						
+						<button name="act_validate_eval" string="Valider" attrs="{'invisible': [('state_eval', '!=', 'new_eval')]}"
+							type="object" class="oe_highlight" />
+						
+						<button name="act_cancel_eval"
+							string="Annuler" type="object" attrs="{'invisible': [('state_eval', '!=', 'validated_eval')]}"/>
+							
+						<field name="state_eval" widget="statusbar"
+							statusbar_visible="new_eval,validated_eval"/>
+					</header>
+					<sheet>						
+						<div class="oe_button_box" name="button_box">		                    
+		                    <button type="action" class="oe_stat_button" name="%(action_view_mission_evaluation)d" attrs="{'invisible': [('taux_moyen', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="taux_moyen" widget="percentpie" string="Taux" help="Taux moyen de l'évaluation"/>
+		                            </span>
+		                        </div>
+		                    </button>
+						</div>						
+						<group>
+							<group>
+								<field name="name" readonly="1"/>
+								<field name="mission_type_id" readonly="1"/>
+								<field name="motif_mission_id" readonly="1"/>
+								<field name="establishment_id" readonly="1"/>
+								<field name="department_id" readonly="1" />
+								<field name="date_from" readonly="1"/>
+								<field name="date_to" readonly="1"/>
+								<field name="duree_mission" readonly="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page name="evaluation" string="Evaluation" >
+								<field name="evaluation_ids" >
+									<tree editable="bottom">
+										<field name= "critere_id"/>
+										<field name="val_ciblee"/>
+										<field name="val_reelle"/>
+										<field name="taux_evaluation"/>
+										<field name="observation"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+        <!-- Actions -->
+		<record id="mission_eval_menu_action" model="ir.actions.act_window">
+			<field name="name">Evaluation de mission</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('cim_mission_eval_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('cim_mission_eval_form')})]"
+			/>
+			<field name="domain">[]</field>
+			<field name="context">{
+					'create': False,
+					}
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"></p>
+			</field>
+		</record>
+		
+		<!-- Sous menu Evaluation missions -->
+		<menuitem name="Faire une évaluation" id="menu_initier_mission_evaluation"
+			parent="menu_cim_mission_evaluation" action="mission_eval_menu_action" groups="cim.group_approbateur,cim.group_controleur_local" sequence="100" />
+
+		
+	</data>
+</odoo> 

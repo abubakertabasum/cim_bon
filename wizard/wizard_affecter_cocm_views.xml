@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_affecter_cocm_wizard" model="ir.ui.view">
+		<field name="name">affecter.cocm.wizard.form</field>
+		<field name="model">affecter.cocm.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="mission_id" />
+						<field name="cocm_id" />
+					</group>
+				</group>
+				
+				<group>
+					<group string="Informations" attrs="{'invisible': [('cocm_id', '=', False)]}">
+						<field name="project_id" />
+						<field name="bailleur_id" />
+						<field name="department_id" />
+						<field name="establishment_id" />
+					</group>
+					<group string="Période" attrs="{'invisible': [('cocm_id', '=', False)]}">
+						<field name="date_from" />
+						<field name="date_to" />
+						<field name="duree_mission" />
+					</group>
+					<group string="Itinéraire" attrs="{'invisible': [('cocm_id', '=', False)]}">
+						<field name="loc_depart" />
+						<field name="loc_destination" />
+					</group>
+				</group>
+				<footer>
+					<button name="action_confirm" string="Confirmer"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_affecter_cocm_wizard"
+		model="ir.actions.act_window">
+		<field name="name">COCM</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">affecter.cocm.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_affecter_cocm_wizard" />
+		<field name="target">new</field>
+	</record>
+
+</odoo>
+        

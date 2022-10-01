@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+	
+	<!-- Mission specific activities -->
+	
+    <record id="mail_activity_mission_approbation" model="mail.activity.type">
+        <field name="name">Approbation</field>
+        <field name="icon">fa-handshake-o</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <record id="mail_activity_mission_budgetisation" model="mail.activity.type">
+        <field name="name">Budgétisation</field>
+        <field name="icon">fa-money</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <record id="mail_activity_mission_validation" model="mail.activity.type">
+        <field name="name">Validation</field>
+        <field name="icon">fa-check-square-o</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <record id="mail_activity_mission_paiement" model="mail.activity.type">
+        <field name="name">Paiement</field>
+        <field name="icon">fa-credit-card</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <record id="mail_activity_mission_verification" model="mail.activity.type">
+        <field name="name">Vérification</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <record id="mail_activity_mission_cloture" model="mail.activity.type">
+        <field name="name">Clôture</field>
+        <field name="icon">fa-unlock-alt</field>
+        <field name="res_model_id" ref="cim.model_cim_mission"/>
+        <field name="delay_count">10</field>
+    </record>
+    
+    <!-- Missions-related subtypes for messaging / Chatter -->
+    
+        <!-- <record id="mt_leave_approved" model="mail.message.subtype">
+            <field name="name">Rejetée</field>
+            <field name="res_model">hr.leave</field>
+            <field name="description">Request approved</field>
+        </record> -->
+	
+	</data>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<menuitem name="Analyses" id="menu_cim_synthese_analyses"
+			parent="menu_cim_synthese" sequence="30" />
+		
+		
+		<!-- Mission report view filter -->
+		<record id="view_cim_mission_report_filter" model="ir.ui.view">
+            <field name="name">cim.mission.report.filter</field>
+            <field name="model">cim.mission.report</field>
+            <field name="arch" type="xml">
+                <search string="Mission">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <separator />
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <separator />
+                    <filter domain="[('state', '=', 'new')]" string="Nouvelles missions" name="new"/>
+                    <filter domain="[('state', '=', 'initiation')]" string="Missions initiées" name="initiation"/>
+                    <filter domain="[('state', '=', 'approbation')]" string="Missions approuvées" name="approbation"/>
+                    <filter domain="[('state', '=', 'budgeting')]" string="Missions budgétisées" name="budgeting"/>
+                    <filter domain="[('state', '=', 'validate_sg')]" string="Missions validées" name="validate_sg"/>
+                    <filter domain="[('state', '=', 'daf_payment')]" string="Missions payées" name="daf_payment"/>
+                    <filter domain="[('state', '=', 'checked')]" string="Missions vérifiées" name="checked"/>
+                    <filter domain="[('state', '=', 'done')]" string="Missions clôturées" name="done"/>
+                    <filter domain="[('state', '=', 'canceled')]" string="Missions annulées" name="canceled"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Programme d'activités" name="project" domain="[]" context="{'group_by': 'project_id'}"/>
+                        <filter string="Structure" name="structure" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by': 'mission_type_id'}"/>
+                        <filter string="Statut" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<record id="crm_mission_report_view_graph" model="ir.ui.view">
+			<field name="name">cim.mission.report.graph</field>
+			<field name="model">cim.mission.report</field>
+			<field name="arch" type="xml">
+				<graph string="Analyse des missions" stacked="True">
+					<field name="department_id" type="col" />
+					<field name="date_from" interval="day" type="row" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="crm_mission_report_view_pivot" model="ir.ui.view">
+			<field name="name">cim.mission.report.pivot</field>
+			<field name="model">cim.mission.report</field>
+			<field name="arch" type="xml">
+				<pivot string="Analyse des missions" disable_linking="True">
+					<field name="department_id" type="col" />
+					<field name="date_from" interval="day" type="row" />
+				</pivot>
+			</field>
+		</record>
+
+		<record id="cim_mission_report_action"
+			model="ir.actions.act_window">
+			<field name="name">Analyse des missions</field>
+			<field name="res_model">cim.mission.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,pivot</field>
+			<field name="domain">[]</field>
+		</record>
+
+		<menuitem name="Missions" id="menu_cim_analyses_mission"
+			parent="menu_cim_synthese_analyses"
+			action="cim_mission_report_action" sequence="10" />
+
+	</data>
+</odoo>

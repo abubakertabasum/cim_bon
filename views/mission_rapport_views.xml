@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+	
+		<!-- Mission rapport tree view -->
+		<record model="ir.ui.view" id="cim_mission_rapport_tree">
+			<field name="name">cim.mission.tree</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="mission_type_id"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+					<field name="taux_moyen"/>
+					<field name="state_eval"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Mission rapport form view -->
+		<record model="ir.ui.view" id="cim_mission_rapport_form">
+			<field name="name">cim.mission.form</field>
+			<field name="model">cim.mission</field>
+			<field name="arch" type="xml">
+				<form string="Rapport de mission">
+					<header>
+						
+						<button name="act_validate_rapport" string="Valider" attrs="{'invisible': [('state_rapport', '!=', 'new_rapport')]}"
+							type="object" class="oe_highlight" />
+						
+						<button name="act_cancel_rapport"
+							string="Annuler" type="object" attrs="{'invisible': [('state_rapport', '!=', 'validated_rapport')]}"/>
+							
+						<button name="act_generate_mission_synthese" string="Générer rapport de mission"
+							type="object" help="Générer rapport synthétique de la mission"
+							class="oe_highlight"/>
+						
+						<field name="state_rapport" widget="statusbar"
+							statusbar_visible="new_rapport,validated_rapport"/>
+					</header>
+					<sheet>						
+						<div class="oe_button_box" name="button_box">		                    
+		                    <button type="action" class="oe_stat_button" name="%(action_view_mission_evaluation)d" attrs="{'invisible': [('taux_moyen', '=', 0.0)]}" context="{'default_mission_id': active_id}">
+		                        <div class="o_form_field o_stat_info">
+		                            <span class="o_stat_value">
+		                                <field name="taux_moyen" widget="percentpie" string="Taux" help="Taux moyen de l'évaluation"/>
+		                            </span>
+		                        </div>
+		                    </button>
+						</div>						
+						<group>
+							<group>
+								<field name="name" readonly="1"/>
+								<field name="mission_type_id" readonly="1"/>
+								<field name="motif_mission_id" readonly="1"/>
+								<field name="establishment_id" readonly="1"/>
+								<field name="department_id" readonly="1" />
+								<field name="date_from" readonly="1"/>
+								<field name="date_to" readonly="1"/>
+								<field name="duree_mission" readonly="1"/>
+							</group>
+						</group>
+						<notebook>
+							
+							<page name="rs" string="Rapport synthétique de la mission" >
+								<group>
+									<group string="Résumé et Enseignements">
+										<field name="rs_resume" string="Résumé succint" />
+										<field name="rs_enseignements" string="Enseignements" />																		
+									</group>
+									<group string="Limites et Suggestions">
+										<field name="rs_limites" string="Limites"/>
+										<field name="rs_suggestions" string="Suggestions"/>
+									</group>
+								</group>
+							</page>
+							
+							<page name="evaluation" string="Rapport d'évaluation" readonly="1">
+								<field name="evaluation_ids" readonly="1" >
+									<tree editable="False">
+										<field name= "critere_id" readonly="1"/>
+										<field name="val_ciblee" readonly="1"/>
+										<field name="val_reelle" readonly="1"/>
+										<field name="taux_evaluation" readonly="1"/>
+										<field name="observation" readonly="1"/>
+									</tree>
+								</field>
+							</page>
+							
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+        <!-- Actions -->
+		<record id="mission_rapport_menu_action" model="ir.actions.act_window">
+			<field name="name">Rapport de mission</field>
+			<field name="res_model">cim.mission</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+   				(0, 0, {'view_mode': 'tree', 'view_id': ref('cim_mission_rapport_tree')}),
+   				(0, 0, {'view_mode': 'form', 'view_id': ref('cim_mission_rapport_form')})]"
+			/>
+			<field name="domain">[]</field>
+			<field name="context">{
+					'create': False,
+					}
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"></p>
+			</field>
+		</record>
+		
+		
+		<!-- Sous menu Rapport des missions -->
+		<menuitem name="Rédiger un rapport de mission" id="menu_initier_mission_rapport"
+			parent="menu_cim_mission_rapport" action="mission_rapport_menu_action" groups="cim.group_approbateur,cim.group_controleur_local" sequence="100" />
+
+		
+	</data>
+</odoo> 

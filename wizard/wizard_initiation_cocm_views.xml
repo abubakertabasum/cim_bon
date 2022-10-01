@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_initiation_cocm_wizard" model="ir.ui.view">
+		<field name="name">initiation.cocm.wizard.form</field>
+		<field name="model">initiation.cocm.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<field name="mission_id" invisible="1"/>
+				<span class="o_form_label">Vous voulez créer votre COCM simultanément?</span>
+				<footer>
+					<button name="action_yes" string="Oui"
+						type="object" class="btn-primary" />
+					<button name="action_no" string="Non"
+						type="object" class="btn-primary" />
+					<button string="Annuler" class="btn-secondary"
+						special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>
+
+</odoo>
+        

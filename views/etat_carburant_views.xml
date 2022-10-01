@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_etat_carburant_document">
+			<t t-call="web.external_layout">
+				<t t-set="o" t-value="o.with_context({'lang': lang})" />
+				<div class="page" style="page-break-after:always;page-break-inside: avoid;">
+					<h5 style="text-align:center;">
+						<div class="row justify-content-between">
+							<div class="col-4"
+								style="float:left;font-size:15px; font-weight:bold">
+								<div t-foreach="o.department_id" t-as="e">
+									<span t-field="e.timbre" />
+								</div>
+							</div>
+							<div class="col-4 mb4" >
+			                    <img t-if="o.establishment_id.logo" t-att-src="image_data_uri(o.establishment_id.logo)" style="width:50%;" alt="Logo"/>
+			                </div>
+							<div class="col-4 text-right"
+								style="float:right; padding:2px;">
+								<div style="padding:5px;text-align:center;">
+									<div style="font-size:15px; font-weight:bold;">BURKINA FASO</div>
+									<div style="font-size:15px;">**********</div>
+									<div style="font-size:15px;">Unité-Progrés-Justice</div>
+								</div>
+							</div>
+						</div>
+						
+						<div style="clear:both;"></div>
+						<br></br>
+						<div style="text-align:center;font-weight:bold;">
+							<u>ETAT DE PAIEMENT DES FRAIS DE CARBURANT</u>
+						</div>
+					
+					</h5>
+					<br></br>
+					
+					<div style="text-align:left;">
+						<b style="font-size:15px;">N° de la mission: </b> <span style="font-size:15px;" t-field="o.num_mission" /> <br></br>
+						<b style="font-size:15px;">Type de mission: </b> <span style="font-size:15px;" t-field="o.mission_type_id" /> <br></br>
+						<b style="font-size:15px;">Itinéraire:</b>
+						<span style="font-size:15px;" t-foreach="o.itineraire_mission_ids" t-as="i" >
+							<span style= "text-align:left;" t-field="i.loc_id.name" /> -
+						</span>						
+					</div>						
+					<div style="text-align:left;" t-if="o.cocm_id">
+						<b>N° de la communication orale: </b> <span style="font-size:15px;" t-field="o.cocm_id" /> <br></br>
+						<b>Autorisée le: </b> <span style="font-size:15px;" t-field="o.cocm_id.date_autorisation" /> <br></br>
+					</div>	
+					<b style="font-size:15px;">Date début: </b> <span style="font-size:15px;" t-field="o.date_from" /> <br></br>
+					<b style="font-size:15px;">Date fin: </b> <span style="font-size:15px;" t-field="o.date_to" /> <br></br>
+					<b style="font-size:15px;">Durée: </b> <span style="font-size:15px;" t-field="o.duree_mission" /> <br></br>
+									
+					<br></br>
+					
+					<table class="table table-bordered table-sm text-center border border-dark" border="1" style="border-collapse: collapse;width: 100%;">
+						<tr style="border:1px soild #000">
+							<th style="background-color:#CCC">Nom  Prénom </th>
+							<th style="background-color:#CCC">Véhicule</th>
+							<th style="background-color:#CCC">Dist. A/R (Km)</th>
+							<th style="background-color:#CCC">P.U Carburant</th>
+							<th style="background-color:#CCC">Montant</th>
+							<th style="background-color:#CCC">Quantité</th>
+							<th style="background-color:#CCC">Dép interne</th>
+							<th style="background-color:#CCC">Montant total</th>
+							<th style="background-color:#CCC">Type / no pièce</th>
+							<th style="background-color:#CCC">Emargement</th>
+						</tr>
+						<div>
+							<div t-foreach="o.vehicule_mission_ids" t-as="v">
+								<tr style="border:1px soild #000">
+									<td style="border:1px soild #000">
+										Chef mission/Conducteur
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="v.vehicule_id.type_carrosserie_id.name" /> -
+										<span t-field="v.vehicule_id.name" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="o.distance_mission" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="v.vehicule_id.type_carburant_id.price" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="v.montant_carb" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="o.duree_mission" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="v.company_vehicule_id.taux_journalier" />
+									</td>
+									<td style="border:1px soild #000">
+										<span t-field="v.montant_carb_mission" />
+									</td>
+									<td style="border:1px soild #000">
+									</td>
+									<td style="border:1px soild #000">
+									</td>
+								</tr>
+							</div>
+						</div>
+						<tr style="border:1px soild #000">
+							<th colspan="7">Total des frais de carburant</th>
+							<th style="background-color:#CCC"><span t-field="o.total_carb_mission"/></th>
+						</tr>
+					</table>
+					<br></br>
+					<p>Arrêté le présent état à la somme de : <span t-esc="o.lettrer(o.total_carb_mission)" /> (<span t-field="o.total_carb_mission" />)</p>
+					<br></br>
+					<br></br>
+					
+					
+					 <div class="row justify-content-between">
+						<div class="col-6 text-left">
+							<span t-field="o.signataire1_id.signature"/>
+						</div>
+						<div class="col-6 text-right">
+							<span t-field="o.signataire2_id.signature"/>
+						</div>
+					</div> 
+					
+					<div style="clear:both;"></div>
+				</div>
+				<div class="footer">
+					<div class="row">
+						<div class="col-xs-2 pull-left">
+							<small>
+								<span>Page</span>
+								<span class="page" />
+								/
+								<span class="topage" />
+							</small>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+		
+
+		<template id="report_etat_carburant">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="cim.report_etat_carburant_document" t-lang="lang" /></t>
+			</t>
+		</template>
+	</data>
+</odoo>

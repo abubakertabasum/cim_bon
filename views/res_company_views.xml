@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<data>
+
+		<record id="view_cim_company_inherit_form" model="ir.ui.view">
+			<field name="name">cim.company.inherit.form</field>
+			<field name="model">res.company</field>
+			<field name="inherit_id" ref="base.view_company_form" />
+			<field name="arch" type="xml">
+				
+				<field name="partner_id" position="before">
+					<field name="etatique" />
+				</field>
+				
+				<label for="name" position="attributes">
+					<attribute name="string">Nom de la structure</attribute>
+				</label>
+				
+				<field name="partner_id" position="after">
+					<field name="company_type_id" required="1"/>
+				</field>
+
+				<field name="zip" position="after">
+					<field name="localite_id" required="1" options="{&quot;no_open&quot;: True}" placeholder="Localité" />
+				</field>
+				
+				<field name="currency_id" position="after">
+					<field name="sigle" required="1" />
+					<field name="prefix" required="1" />
+					<field name="auto_number_mission" invisible="1" />
+					<field name="timbre" />
+				</field>
+
+				<field name="vat" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+
+				<field name="company_registry" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+
+				<field name="company_registry" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+
+				<field name="incoterm_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				
+				<field name="currency_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+
+				<field name="parent_id" position="attributes">
+					<attribute name="string">Structure mère</attribute>
+				</field>
+				
+			 	<xpath expr="//page/group[1]" position="after">
+			 		<group string="Signataires">
+			 			<group>
+				 			<field name="ordonnateur_id" />
+				 			<field name="ordonnateur_externe_id" />
+				 			<field name="regisseur_id" />
+			 			</group>
+			 		</group>
+		        </xpath>
+
+			</field>
+		</record>
+
+		<record id="view_cim_zone_mission_form" model="ir.ui.view">
+			<field name="name">cim.zone.mission.form</field>
+			<field name="model">cim.zone.mission</field>
+			<field name="arch" type="xml">
+				<form string="Zone">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button"
+									options='{"terminology": "archive"}' />
+							</button>
+						</div>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="mission_type_id"/>
+								<field name="description" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_cim_zone_mission_tree" model="ir.ui.view">
+			<field name="name">cim.zone.mission.tree</field>
+			<field name="model">cim.zone.mission</field>
+			<field name="arch" type="xml">
+				<tree string="Zone">
+					<field name="name" />
+					<field name="mission_type_id"/>
+					<field name="description" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_cim_company_type_tree" model="ir.ui.view">
+			<field name="name">cim.company.type.tree</field>
+			<field name="model">cim.company.type</field>
+			<field name="arch" type="xml">
+				<tree string="Type de structure">
+					<field name="name" />
+					<field name="description" />
+					<field name="cocm" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_cim_company_type_form" model="ir.ui.view">
+			<field name="name">cim.company.type.form</field>
+			<field name="model">cim.company.type</field>
+			<field name="arch" type="xml">
+				<form string="Type de structure">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button" />
+							</button>
+						</div>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="cocm" />
+								<field name="description" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_cim_localite_tree" model="ir.ui.view">
+			<field name="name">cim.localite.tree</field>
+			<field name="model">cim.localite</field>
+			<field name="arch" type="xml">
+				<tree string="Localité">
+					<field name="name" />
+					<field name="typelocalite_id" />
+					<field name="zone_mission_id" />
+					<field name="localite_mere_id" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_cim_localite_form" model="ir.ui.view">
+			<field name="name">cim.localite.form</field>
+			<field name="model">cim.localite</field>
+			<field name="arch" type="xml">
+				<form string="Localité">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button"
+									options='{"terminology": "archive"}' />
+							</button>
+						</div>
+						<group>
+							<group>
+								<field name="name" placeholder="Saisir une localité unique" />
+								<field name="typelocalite_id" />
+								<field name="zone_mission_id" />
+								<field name="localite_mere_id" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="view_cim_typelocalite_tree" model="ir.ui.view">
+			<field name="name">cim.typelocalite.tree</field>
+			<field name="model">cim.typelocalite</field>
+			<field name="arch" type="xml">
+				<tree string="Type de localité">
+					<field name="name" placeholder="Saisir un intitulé unique"/>
+					<field name="description" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_cim_typelocalite_form" model="ir.ui.view">
+			<field name="name">cim.typelocalite.form</field>
+			<field name="model">cim.typelocalite</field>
+			<field name="arch" type="xml">
+				<form string="Type de localité">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object"
+								class="oe_stat_button" icon="fa-archive">
+								<field name="active" widget="boolean_button"
+									options='{"terminology": "archive"}' />
+							</button>
+						</div>
+						<group>
+							<group>
+								<field name="name" placeholder="Saisir un intitulé unique"/>
+								<field name="description" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Actions company -->
+		<record model="ir.actions.act_window" id="cim_structure_act">
+			<field name="name">Structures</field>
+			<field name="res_model">res.company</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Actions company zone -->
+		<record model="ir.actions.act_window"
+			id="cim_zone_mission_act">
+			<field name="name">Zones de mission</field>
+			<field name="res_model">cim.zone.mission</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Actions company type -->
+		<record model="ir.actions.act_window"
+			id="cim_type_structure_act">
+			<field name="name">Types de structures</field>
+			<field name="res_model">cim.company.type</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<!-- Actions localite -->
+		<record model="ir.actions.act_window" id="cim_localite_act">
+			<field name="name">Localités</field>
+			<field name="res_model">cim.localite</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Actions Type localite -->
+		<record model="ir.actions.act_window" id="cim_typelocalite_act">
+			<field name="name">Type de Localité</field>
+			<field name="res_model">cim.typelocalite</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Menu company -->
+		<menuitem name="Structures" id="menu_cim_structure"
+			parent="menu_cim_admin_central" action="cim_structure_act"
+			sequence="400" />
+
+		<!-- Menu zone -->
+		<menuitem name="Zones de mission" id="menu_cim_zone_mission"
+			parent="menu_cim_admin_central" action="cim_zone_mission_act" sequence="10"/>
+
+		<!-- Menu company type -->
+		<menuitem name="Types de stucture"
+			id="menu_cim_type_structure" parent="menu_cim_admin_central"
+			action="cim_type_structure_act" sequence="100" />
+
+		<!-- Menu localite -->
+		<menuitem name="Localités" id="menu_cim_localite"
+			parent="menu_cim_admin_central" action="cim_localite_act"
+			sequence="300" />
+		
+		<!-- Menu Type localite -->
+		<menuitem name="Type de localités" id="menu_cim_typelocalite"
+			parent="menu_cim_admin_central" action="cim_typelocalite_act"
+			sequence="200" />
+		
+		
+	</data>
+</odoo>
